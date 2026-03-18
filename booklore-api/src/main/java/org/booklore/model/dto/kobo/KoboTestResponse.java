@@ -1,13 +1,11 @@
 package org.booklore.model.dto.kobo;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Map;
 
 @Data
 @Builder
@@ -15,12 +13,12 @@ import java.util.Map;
 @AllArgsConstructor
 public class KoboTestResponse {
 
-    @JsonProperty("Result")
-    private String result;
+  @JsonProperty("Result")
+  private String result;
 
-    @JsonProperty("TestKey")
-    private String testKey;
+  @JsonProperty("TestKey")
+  private String testKey;
 
-    @JsonProperty("Tests")
-    private Map<String, Object> tests;
+  @JsonProperty("Tests")
+  private Map<String, Object> tests;
 }

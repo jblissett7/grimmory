@@ -1,4 +1,3 @@
 package org.booklore.model.dto.kobo;
 
-public interface Entitlement {
-}
+public interface Entitlement {}

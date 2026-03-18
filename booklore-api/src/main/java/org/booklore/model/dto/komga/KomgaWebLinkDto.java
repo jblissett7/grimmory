@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class KomgaWebLinkDto {
-    private String label;
-    private String url;
+  private String label;
+  private String url;
 }

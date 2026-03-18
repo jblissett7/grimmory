@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CbxProgress {
-    @NotNull
-    Integer page;
-    @NotNull
-    Float percentage;
+  @NotNull Integer page;
+  @NotNull Float percentage;
 }

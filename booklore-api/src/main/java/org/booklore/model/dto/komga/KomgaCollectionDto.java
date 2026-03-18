@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class KomgaCollectionDto {
-    private String id;
-    private String name;
-    private Boolean ordered;
-    private Integer seriesCount;
-    private String createdDate;
-    private String lastModifiedDate;
+  private String id;
+  private String name;
+  private Boolean ordered;
+  private Integer seriesCount;
+  private String createdDate;
+  private String lastModifiedDate;
 }

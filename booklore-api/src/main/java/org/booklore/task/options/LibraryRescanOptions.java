@@ -12,6 +12,6 @@ import org.booklore.model.enums.MetadataReplaceMode;
 @AllArgsConstructor
 public class LibraryRescanOptions {
 
-    private boolean updateMetadataFromFiles;
-    private MetadataReplaceMode metadataReplaceMode;
+  private boolean updateMetadataFromFiles;
+  private MetadataReplaceMode metadataReplaceMode;
 }

@@ -12,7 +12,7 @@ import org.booklore.task.TaskStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskCreateResponse {
-    private String taskId;
-    private TaskType taskType;
-    private TaskStatus status;
+  private String taskId;
+  private TaskType taskType;
+  private TaskStatus status;
 }

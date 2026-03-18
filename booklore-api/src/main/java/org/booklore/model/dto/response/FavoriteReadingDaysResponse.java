@@ -10,9 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FavoriteReadingDaysResponse {
-    private Integer dayOfWeek; // 1=Monday, 7=Sunday
-    private String dayName;
-    private Long sessionCount;
-    private Long totalDurationSeconds;
+  private Integer dayOfWeek; // 1=Monday, 7=Sunday
+  private String dayName;
+  private Long sessionCount;
+  private Long totalDurationSeconds;
 }
-

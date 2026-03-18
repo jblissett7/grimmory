@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SidebarSortOption {
-    private String field;
-    private String order;
+  private String field;
+  private String order;
 }

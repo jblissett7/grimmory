@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmailRecipientV2 {
-    private Long id;
-    private Long userId;
-    private String email;
-    private String name;
-    private boolean defaultRecipient;
+  private Long id;
+  private Long userId;
+  private String email;
+  private String name;
+  private boolean defaultRecipient;
 }

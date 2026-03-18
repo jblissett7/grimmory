@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class NotebookBookOption {
-    private Long bookId;
-    private String bookTitle;
+  private Long bookId;
+  private String bookTitle;
 }

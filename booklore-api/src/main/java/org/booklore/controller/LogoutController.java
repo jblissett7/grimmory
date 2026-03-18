@@ -17,14 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/auth")
 public class LogoutController {
 
-    private final LogoutService logoutService;
+  private final LogoutService logoutService;
 
-    @PostMapping("/logout")
-    public ResponseEntity<LogoutResponse> logout(Authentication auth,
-                                                  @RequestBody(required = false) LogoutRequest request,
-                                                  @RequestHeader(value = "Origin", required = false) String origin) {
-        String refreshToken = request != null ? request.refreshToken() : null;
-        LogoutResponse response = logoutService.logout(auth, refreshToken, origin);
-        return ResponseEntity.ok(response);
-    }
+  @PostMapping("/logout")
+  public ResponseEntity<LogoutResponse> logout(
+      Authentication auth,
+      @RequestBody(required = false) LogoutRequest request,
+      @RequestHeader(value = "Origin", required = false) String origin) {
+    String refreshToken = request != null ? request.refreshToken() : null;
+    LogoutResponse response = logoutService.logout(auth, refreshToken, origin);
+    return ResponseEntity.ok(response);
+  }
 }

@@ -8,8 +8,11 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ShelfMapper {
 
-    @Mapping(source = "user.id", target = "userId")
-    @Mapping(source = "public", target = "publicShelf")
-    @Mapping(target = "bookCount", expression = "java(shelfEntity.getBookEntities() != null ? shelfEntity.getBookEntities().size() : 0)")
-    Shelf toShelf(ShelfEntity shelfEntity);
+  @Mapping(source = "user.id", target = "userId")
+  @Mapping(source = "public", target = "publicShelf")
+  @Mapping(
+      target = "bookCount",
+      expression =
+          "java(shelfEntity.getBookEntities() != null ? shelfEntity.getBookEntities().size() : 0)")
+  Shelf toShelf(ShelfEntity shelfEntity);
 }

@@ -1,5 +1,11 @@
 package org.booklore.task.tasks;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.CancellationException;
 import org.booklore.exception.APIException;
 import org.booklore.model.dto.BookLoreUser;
 import org.booklore.model.dto.request.MetadataRefreshRequest;
@@ -15,130 +21,130 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.concurrent.CancellationException;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 class RefreshMetadataTaskTest {
 
-    @Mock
-    private MetadataRefreshService metadataRefreshService;
+  @Mock private MetadataRefreshService metadataRefreshService;
 
-    @InjectMocks
-    private RefreshMetadataTask refreshMetadataTask;
+  @InjectMocks private RefreshMetadataTask refreshMetadataTask;
 
-    private BookLoreUser user;
-    private TaskCreateRequest taskCreateRequest;
-    private MetadataRefreshRequest metadataRefreshRequest;
+  private BookLoreUser user;
+  private TaskCreateRequest taskCreateRequest;
+  private MetadataRefreshRequest metadataRefreshRequest;
 
-    @BeforeEach
-    void setUp() {
-        BookLoreUser.UserPermissions permissions = new BookLoreUser.UserPermissions();
-        user = BookLoreUser.builder().permissions(permissions).build();
-        
-        taskCreateRequest = mock(TaskCreateRequest.class);
-        metadataRefreshRequest = MetadataRefreshRequest.builder().build();
-        
-        when(taskCreateRequest.getOptionsAs(MetadataRefreshRequest.class)).thenReturn(metadataRefreshRequest);
-    }
+  @BeforeEach
+  void setUp() {
+    BookLoreUser.UserPermissions permissions = new BookLoreUser.UserPermissions();
+    user = BookLoreUser.builder().permissions(permissions).build();
 
-    @Test
-    void validatePermissions_shouldThrowException_whenLibraryRefreshAndNoBulkPermission() {
-        metadataRefreshRequest.setRefreshType(MetadataRefreshRequest.RefreshType.LIBRARY);
+    taskCreateRequest = mock(TaskCreateRequest.class);
+    metadataRefreshRequest = MetadataRefreshRequest.builder().build();
 
-        assertThrows(APIException.class, () -> refreshMetadataTask.validatePermissions(user, taskCreateRequest));
-    }
-    
-    @Test
-    void validatePermissions_shouldPass_whenLibraryRefreshAndHasBulkPermission() {
-        metadataRefreshRequest.setRefreshType(MetadataRefreshRequest.RefreshType.LIBRARY);
-        user.getPermissions().setCanBulkAutoFetchMetadata(true);
+    when(taskCreateRequest.getOptionsAs(MetadataRefreshRequest.class))
+        .thenReturn(metadataRefreshRequest);
+  }
 
-        assertDoesNotThrow(() -> refreshMetadataTask.validatePermissions(user, taskCreateRequest));
-    }
+  @Test
+  void validatePermissions_shouldThrowException_whenLibraryRefreshAndNoBulkPermission() {
+    metadataRefreshRequest.setRefreshType(MetadataRefreshRequest.RefreshType.LIBRARY);
 
-    @Test
-    void validatePermissions_shouldThrowException_whenMultipleBooksAndNoBulkPermission() {
-        metadataRefreshRequest.setRefreshType(MetadataRefreshRequest.RefreshType.BOOKS);
-        metadataRefreshRequest.setBookIds(Set.of(1L, 2L));
+    assertThrows(
+        APIException.class, () -> refreshMetadataTask.validatePermissions(user, taskCreateRequest));
+  }
 
-        assertThrows(APIException.class, () -> refreshMetadataTask.validatePermissions(user, taskCreateRequest));
-    }
+  @Test
+  void validatePermissions_shouldPass_whenLibraryRefreshAndHasBulkPermission() {
+    metadataRefreshRequest.setRefreshType(MetadataRefreshRequest.RefreshType.LIBRARY);
+    user.getPermissions().setCanBulkAutoFetchMetadata(true);
 
-    @Test
-    void validatePermissions_shouldPass_whenMultipleBooksAndHasBulkPermission() {
-        metadataRefreshRequest.setRefreshType(MetadataRefreshRequest.RefreshType.BOOKS);
-        metadataRefreshRequest.setBookIds(Set.of(1L, 2L));
-        user.getPermissions().setCanBulkAutoFetchMetadata(true);
+    assertDoesNotThrow(() -> refreshMetadataTask.validatePermissions(user, taskCreateRequest));
+  }
 
-        assertDoesNotThrow(() -> refreshMetadataTask.validatePermissions(user, taskCreateRequest));
-    }
+  @Test
+  void validatePermissions_shouldThrowException_whenMultipleBooksAndNoBulkPermission() {
+    metadataRefreshRequest.setRefreshType(MetadataRefreshRequest.RefreshType.BOOKS);
+    metadataRefreshRequest.setBookIds(Set.of(1L, 2L));
 
-    @Test
-    void validatePermissions_shouldPass_whenSingleBookAndNoBulkPermission() {
-        metadataRefreshRequest.setRefreshType(MetadataRefreshRequest.RefreshType.BOOKS);
-        metadataRefreshRequest.setBookIds(Set.of(1L));
+    assertThrows(
+        APIException.class, () -> refreshMetadataTask.validatePermissions(user, taskCreateRequest));
+  }
 
-        assertDoesNotThrow(() -> refreshMetadataTask.validatePermissions(user, taskCreateRequest));
-    }
+  @Test
+  void validatePermissions_shouldPass_whenMultipleBooksAndHasBulkPermission() {
+    metadataRefreshRequest.setRefreshType(MetadataRefreshRequest.RefreshType.BOOKS);
+    metadataRefreshRequest.setBookIds(Set.of(1L, 2L));
+    user.getPermissions().setCanBulkAutoFetchMetadata(true);
 
-    @Test
-    void validatePermissions_shouldThrowException_whenUserPermissionsAreNull() {
-        user.setPermissions(null);
-        metadataRefreshRequest.setRefreshType(MetadataRefreshRequest.RefreshType.LIBRARY);
+    assertDoesNotThrow(() -> refreshMetadataTask.validatePermissions(user, taskCreateRequest));
+  }
 
-        assertThrows(APIException.class, () -> refreshMetadataTask.validatePermissions(user, taskCreateRequest));
-    }
+  @Test
+  void validatePermissions_shouldPass_whenSingleBookAndNoBulkPermission() {
+    metadataRefreshRequest.setRefreshType(MetadataRefreshRequest.RefreshType.BOOKS);
+    metadataRefreshRequest.setBookIds(Set.of(1L));
 
-    @Test
-    void validatePermissions_shouldPass_whenNoBookIdsAndNoBulkPermission_AssumingSingleOrNoAction() {
-        metadataRefreshRequest.setRefreshType(MetadataRefreshRequest.RefreshType.BOOKS);
-        metadataRefreshRequest.setBookIds(null);
+    assertDoesNotThrow(() -> refreshMetadataTask.validatePermissions(user, taskCreateRequest));
+  }
 
-        assertDoesNotThrow(() -> refreshMetadataTask.validatePermissions(user, taskCreateRequest));
-    }
+  @Test
+  void validatePermissions_shouldThrowException_whenUserPermissionsAreNull() {
+    user.setPermissions(null);
+    metadataRefreshRequest.setRefreshType(MetadataRefreshRequest.RefreshType.LIBRARY);
 
-    @Test
-    void validatePermissions_shouldPass_whenEmptyBookIdSet() {
-        metadataRefreshRequest.setRefreshType(MetadataRefreshRequest.RefreshType.BOOKS);
-        metadataRefreshRequest.setBookIds(Collections.emptySet());
+    assertThrows(
+        APIException.class, () -> refreshMetadataTask.validatePermissions(user, taskCreateRequest));
+  }
 
-        assertDoesNotThrow(() -> refreshMetadataTask.validatePermissions(user, taskCreateRequest));
-    }
+  @Test
+  void validatePermissions_shouldPass_whenNoBookIdsAndNoBulkPermission_AssumingSingleOrNoAction() {
+    metadataRefreshRequest.setRefreshType(MetadataRefreshRequest.RefreshType.BOOKS);
+    metadataRefreshRequest.setBookIds(null);
 
-    @Test
-    void execute_shouldCallServiceAndReturnCompleted() {
-        when(taskCreateRequest.getTaskId()).thenReturn("task-1");
-        TaskCreateResponse response = refreshMetadataTask.execute(taskCreateRequest);
+    assertDoesNotThrow(() -> refreshMetadataTask.validatePermissions(user, taskCreateRequest));
+  }
 
-        assertEquals(TaskStatus.COMPLETED, response.getStatus());
-        assertEquals("task-1", response.getTaskId());
-        
-        ArgumentCaptor<MetadataRefreshRequest> requestCaptor = ArgumentCaptor.forClass(MetadataRefreshRequest.class);
-        ArgumentCaptor<String> taskIdCaptor = ArgumentCaptor.forClass(String.class);
-        
-        verify(metadataRefreshService).refreshMetadata(requestCaptor.capture(), taskIdCaptor.capture());
-        assertEquals(metadataRefreshRequest, requestCaptor.getValue());
-        assertEquals("task-1", taskIdCaptor.getValue());
-    }
+  @Test
+  void validatePermissions_shouldPass_whenEmptyBookIdSet() {
+    metadataRefreshRequest.setRefreshType(MetadataRefreshRequest.RefreshType.BOOKS);
+    metadataRefreshRequest.setBookIds(Collections.emptySet());
 
-    @Test
-    void execute_shouldPropagateException_whenServiceThrows() {
-        when(taskCreateRequest.getTaskId()).thenReturn("task-1");
-        doThrow(new RuntimeException("Service error")).when(metadataRefreshService).refreshMetadata(metadataRefreshRequest, "task-1");
+    assertDoesNotThrow(() -> refreshMetadataTask.validatePermissions(user, taskCreateRequest));
+  }
 
-        assertThrows(RuntimeException.class, () -> refreshMetadataTask.execute(taskCreateRequest));
-    }
+  @Test
+  void execute_shouldCallServiceAndReturnCompleted() {
+    when(taskCreateRequest.getTaskId()).thenReturn("task-1");
+    TaskCreateResponse response = refreshMetadataTask.execute(taskCreateRequest);
 
-    @Test
-    void execute_shouldHandleCancellation() {
-        when(taskCreateRequest.getTaskId()).thenReturn("task-1");
-        doThrow(new CancellationException("Task cancelled")).when(metadataRefreshService).refreshMetadata(metadataRefreshRequest, "task-1");
+    assertEquals(TaskStatus.COMPLETED, response.getStatus());
+    assertEquals("task-1", response.getTaskId());
 
-        assertThrows(CancellationException.class, () -> refreshMetadataTask.execute(taskCreateRequest));
-    }
+    ArgumentCaptor<MetadataRefreshRequest> requestCaptor =
+        ArgumentCaptor.forClass(MetadataRefreshRequest.class);
+    ArgumentCaptor<String> taskIdCaptor = ArgumentCaptor.forClass(String.class);
+
+    verify(metadataRefreshService).refreshMetadata(requestCaptor.capture(), taskIdCaptor.capture());
+    assertEquals(metadataRefreshRequest, requestCaptor.getValue());
+    assertEquals("task-1", taskIdCaptor.getValue());
+  }
+
+  @Test
+  void execute_shouldPropagateException_whenServiceThrows() {
+    when(taskCreateRequest.getTaskId()).thenReturn("task-1");
+    doThrow(new RuntimeException("Service error"))
+        .when(metadataRefreshService)
+        .refreshMetadata(metadataRefreshRequest, "task-1");
+
+    assertThrows(RuntimeException.class, () -> refreshMetadataTask.execute(taskCreateRequest));
+  }
+
+  @Test
+  void execute_shouldHandleCancellation() {
+    when(taskCreateRequest.getTaskId()).thenReturn("task-1");
+    doThrow(new CancellationException("Task cancelled"))
+        .when(metadataRefreshService)
+        .refreshMetadata(metadataRefreshRequest, "task-1");
+
+    assertThrows(CancellationException.class, () -> refreshMetadataTask.execute(taskCreateRequest));
+  }
 }

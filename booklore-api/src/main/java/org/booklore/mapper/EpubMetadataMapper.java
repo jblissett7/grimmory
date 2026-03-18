@@ -9,9 +9,9 @@ import org.mapstruct.factory.Mappers;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface EpubMetadataMapper {
 
-    EpubMetadataMapper INSTANCE = Mappers.getMapper(EpubMetadataMapper.class);
+  EpubMetadataMapper INSTANCE = Mappers.getMapper(EpubMetadataMapper.class);
 
-    EpubMetadata toEpubMetadata(BookMetadata bookMetadata);
+  EpubMetadata toEpubMetadata(BookMetadata bookMetadata);
 
-    BookMetadata toBookMetadata(EpubMetadata epubMetadata);
+  BookMetadata toBookMetadata(EpubMetadata epubMetadata);
 }

@@ -12,14 +12,14 @@ import lombok.*;
 @Table(name = "library_path")
 public class LibraryPathEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "library_id", nullable = false)
-    private LibraryEntity library;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "library_id", nullable = false)
+  private LibraryEntity library;
 
-    @Column(nullable = false)
-    private String path;
+  @Column(nullable = false)
+  private String path;
 }

@@ -8,5 +8,5 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface LibraryPathMapper {
 
-    LibraryPath toLibraryPath(LibraryPathEntity libraryPathEntity);
+  LibraryPath toLibraryPath(LibraryPathEntity libraryPathEntity);
 }

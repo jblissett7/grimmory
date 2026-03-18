@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SidecarRatings {
-    private SidecarRating amazon;
-    private SidecarRating goodreads;
-    private SidecarRating hardcover;
-    private SidecarRating lubimyczytac;
-    private SidecarRating ranobedb;
-    private SidecarRating audible;
+  private SidecarRating amazon;
+  private SidecarRating goodreads;
+  private SidecarRating hardcover;
+  private SidecarRating lubimyczytac;
+  private SidecarRating ranobedb;
+  private SidecarRating audible;
 }

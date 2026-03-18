@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskCancelResponse {
-    private String taskId;
-    private boolean cancelled;
-    private String message;
+  private String taskId;
+  private boolean cancelled;
+  private String message;
 }
-

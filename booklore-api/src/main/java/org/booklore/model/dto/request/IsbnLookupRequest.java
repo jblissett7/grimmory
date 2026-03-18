@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class IsbnLookupRequest {
-    private String isbn;
+  private String isbn;
 }

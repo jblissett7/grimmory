@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class HardcoverSyncSettings {
-    private String hardcoverApiKey;
-    private boolean hardcoverSyncEnabled;
+  private String hardcoverApiKey;
+  private boolean hardcoverSyncEnabled;
 }

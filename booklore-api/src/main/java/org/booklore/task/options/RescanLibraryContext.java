@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RescanLibraryContext {
-    private Long libraryId;
-    private LibraryRescanOptions options;
+  private Long libraryId;
+  private LibraryRescanOptions options;
 }

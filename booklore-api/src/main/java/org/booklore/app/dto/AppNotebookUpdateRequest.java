@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AppNotebookUpdateRequest {
-    @Size(max = 5000)
-    private String note;
+  @Size(max = 5000)
+  private String note;
 
-    @Pattern(regexp = "^#[0-9A-Fa-f]{6}$")
-    private String color;
+  @Pattern(regexp = "^#[0-9A-Fa-f]{6}$")
+  private String color;
 }

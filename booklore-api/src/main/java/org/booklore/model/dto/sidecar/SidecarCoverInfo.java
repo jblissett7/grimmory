@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SidecarCoverInfo {
-    private String source;
-    private String path;
+  private String source;
+  private String path;
 }

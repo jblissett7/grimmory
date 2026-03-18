@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class KomgaAuthorDto {
-    private String name;
-    private String role;
+  private String name;
+  private String role;
 }

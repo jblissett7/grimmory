@@ -10,17 +10,16 @@ import org.springframework.scheduling.concurrent.SimpleAsyncTaskScheduler;
 @Configuration
 public class TaskExecutorConfig {
 
-    @Bean(name = "taskExecutor")
-    public AsyncTaskExecutor taskExecutor() {
-        return new VirtualThreadTaskExecutor("async-");
-    }
+  @Bean(name = "taskExecutor")
+  public AsyncTaskExecutor taskExecutor() {
+    return new VirtualThreadTaskExecutor("async-");
+  }
 
-    @Bean
-    public TaskScheduler taskScheduler() {
-        SimpleAsyncTaskScheduler scheduler = new SimpleAsyncTaskScheduler();
-        scheduler.setVirtualThreads(true);
-        scheduler.setThreadNamePrefix("scheduler-");
-        return scheduler;
-    }
+  @Bean
+  public TaskScheduler taskScheduler() {
+    SimpleAsyncTaskScheduler scheduler = new SimpleAsyncTaskScheduler();
+    scheduler.setVirtualThreads(true);
+    scheduler.setThreadNamePrefix("scheduler-");
+    return scheduler;
+  }
 }
-

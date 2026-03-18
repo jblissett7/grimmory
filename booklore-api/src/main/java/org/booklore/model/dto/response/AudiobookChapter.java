@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AudiobookChapter {
-    private Integer index;
-    private String title;
-    private Long startTimeMs;
-    private Long endTimeMs;
-    private Long durationMs;
+  private Integer index;
+  private String title;
+  private Long startTimeMs;
+  private Long endTimeMs;
+  private Long durationMs;
 }

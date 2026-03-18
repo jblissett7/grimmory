@@ -1,12 +1,20 @@
 package org.booklore.app.service;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Tuple;
 import jakarta.persistence.TypedQuery;
-import org.booklore.config.security.service.AuthenticationService;
-import org.booklore.exception.APIException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import org.booklore.app.dto.AppFilterOptions;
 import org.booklore.app.mapper.AppBookMapper;
+import org.booklore.config.security.service.AuthenticationService;
+import org.booklore.exception.APIException;
 import org.booklore.model.dto.Book;
 import org.booklore.model.dto.BookLoreUser;
 import org.booklore.model.dto.Library;
@@ -28,233 +36,238 @@ import org.mockito.quality.Strictness;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppBookServiceFilterOptionsTest {
 
-    @Mock private BookRepository bookRepository;
-    @Mock private UserBookProgressRepository userBookProgressRepository;
-    @Mock private UserBookFileProgressRepository userBookFileProgressRepository;
-    @Mock private ShelfRepository shelfRepository;
-    @Mock private AuthenticationService authenticationService;
-    @Mock private AppBookMapper mobileBookMapper;
-    @Mock private MagicShelfBookService magicShelfBookService;
-    @Mock private EntityManager entityManager;
+  @Mock private BookRepository bookRepository;
+  @Mock private UserBookProgressRepository userBookProgressRepository;
+  @Mock private UserBookFileProgressRepository userBookFileProgressRepository;
+  @Mock private ShelfRepository shelfRepository;
+  @Mock private AuthenticationService authenticationService;
+  @Mock private AppBookMapper mobileBookMapper;
+  @Mock private MagicShelfBookService magicShelfBookService;
+  @Mock private EntityManager entityManager;
 
-    private AppBookService service;
+  private AppBookService service;
 
-    private final Long userId = 1L;
+  private final Long userId = 1L;
 
-    @BeforeEach
-    void setUp() {
-        service = new AppBookService(
-                bookRepository, userBookProgressRepository, userBookFileProgressRepository,
-                shelfRepository, authenticationService, mobileBookMapper,
-                magicShelfBookService, entityManager
-        );
-    }
+  @BeforeEach
+  void setUp() {
+    service =
+        new AppBookService(
+            bookRepository,
+            userBookProgressRepository,
+            userBookFileProgressRepository,
+            shelfRepository,
+            authenticationService,
+            mobileBookMapper,
+            magicShelfBookService,
+            entityManager);
+  }
 
-    // -------------------------------------------------------------------------
-    // Global (no scoping params)
-    // -------------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Global (no scoping params)
+  // -------------------------------------------------------------------------
 
-    @Test
-    void getFilterOptions_noParams_returnsGlobalOptions() {
-        mockAdminUser();
-        mockJpqlQueries();
+  @Test
+  void getFilterOptions_noParams_returnsGlobalOptions() {
+    mockAdminUser();
+    mockJpqlQueries();
 
-        AppFilterOptions result = service.getFilterOptions(null, null, null);
+    AppFilterOptions result = service.getFilterOptions(null, null, null);
 
-        assertNotNull(result);
-        assertNotNull(result.getAuthors());
-        assertNotNull(result.getLanguages());
-        assertNotNull(result.getFileTypes());
-        assertFalse(result.getReadStatuses().isEmpty());
-    }
+    assertNotNull(result);
+    assertNotNull(result.getAuthors());
+    assertNotNull(result.getLanguages());
+    assertNotNull(result.getFileTypes());
+    assertFalse(result.getReadStatuses().isEmpty());
+  }
 
-    // -------------------------------------------------------------------------
-    // Library scoping
-    // -------------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Library scoping
+  // -------------------------------------------------------------------------
 
-    @Test
-    void getFilterOptions_withLibraryId_admin_succeeds() {
-        mockAdminUser();
-        mockJpqlQueries();
+  @Test
+  void getFilterOptions_withLibraryId_admin_succeeds() {
+    mockAdminUser();
+    mockJpqlQueries();
 
-        AppFilterOptions result = service.getFilterOptions(5L, null, null);
+    AppFilterOptions result = service.getFilterOptions(5L, null, null);
 
-        assertNotNull(result);
-        verify(entityManager, times(3)).createQuery(anyString(), any(Class.class));
-    }
+    assertNotNull(result);
+    verify(entityManager, times(3)).createQuery(anyString(), any(Class.class));
+  }
 
-    @Test
-    void getFilterOptions_withLibraryId_nonAdminWithAccess_succeeds() {
-        mockNonAdminUser(Set.of(5L, 10L));
-        mockJpqlQueries();
+  @Test
+  void getFilterOptions_withLibraryId_nonAdminWithAccess_succeeds() {
+    mockNonAdminUser(Set.of(5L, 10L));
+    mockJpqlQueries();
 
-        AppFilterOptions result = service.getFilterOptions(5L, null, null);
+    AppFilterOptions result = service.getFilterOptions(5L, null, null);
 
-        assertNotNull(result);
-    }
+    assertNotNull(result);
+  }
 
-    @Test
-    void getFilterOptions_withLibraryId_nonAdminNoAccess_throwsForbidden() {
-        mockNonAdminUser(Set.of(10L));
+  @Test
+  void getFilterOptions_withLibraryId_nonAdminNoAccess_throwsForbidden() {
+    mockNonAdminUser(Set.of(10L));
 
-        assertThrows(APIException.class, () -> service.getFilterOptions(5L, null, null));
-    }
+    assertThrows(APIException.class, () -> service.getFilterOptions(5L, null, null));
+  }
 
-    // -------------------------------------------------------------------------
-    // Shelf scoping
-    // -------------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Shelf scoping
+  // -------------------------------------------------------------------------
 
-    @Test
-    void getFilterOptions_withShelfId_publicShelf_succeeds() {
-        mockAdminUser();
-        ShelfEntity shelf = ShelfEntity.builder().id(10L).isPublic(true)
-                .user(BookLoreUserEntity.builder().id(99L).build()).build();
-        when(shelfRepository.findById(10L)).thenReturn(Optional.of(shelf));
-        mockJpqlQueries();
+  @Test
+  void getFilterOptions_withShelfId_publicShelf_succeeds() {
+    mockAdminUser();
+    ShelfEntity shelf =
+        ShelfEntity.builder()
+            .id(10L)
+            .isPublic(true)
+            .user(BookLoreUserEntity.builder().id(99L).build())
+            .build();
+    when(shelfRepository.findById(10L)).thenReturn(Optional.of(shelf));
+    mockJpqlQueries();
 
-        AppFilterOptions result = service.getFilterOptions(null, 10L, null);
+    AppFilterOptions result = service.getFilterOptions(null, 10L, null);
 
-        assertNotNull(result);
-    }
+    assertNotNull(result);
+  }
 
-    @Test
-    void getFilterOptions_withShelfId_ownPrivateShelf_succeeds() {
-        mockAdminUser();
-        ShelfEntity shelf = ShelfEntity.builder().id(10L).isPublic(false)
-                .user(BookLoreUserEntity.builder().id(userId).build()).build();
-        when(shelfRepository.findById(10L)).thenReturn(Optional.of(shelf));
-        mockJpqlQueries();
+  @Test
+  void getFilterOptions_withShelfId_ownPrivateShelf_succeeds() {
+    mockAdminUser();
+    ShelfEntity shelf =
+        ShelfEntity.builder()
+            .id(10L)
+            .isPublic(false)
+            .user(BookLoreUserEntity.builder().id(userId).build())
+            .build();
+    when(shelfRepository.findById(10L)).thenReturn(Optional.of(shelf));
+    mockJpqlQueries();
 
-        AppFilterOptions result = service.getFilterOptions(null, 10L, null);
+    AppFilterOptions result = service.getFilterOptions(null, 10L, null);
 
-        assertNotNull(result);
-    }
+    assertNotNull(result);
+  }
 
-    @Test
-    void getFilterOptions_withShelfId_otherPrivateShelf_throwsForbidden() {
-        mockAdminUser();
-        ShelfEntity shelf = ShelfEntity.builder().id(10L).isPublic(false)
-                .user(BookLoreUserEntity.builder().id(99L).build()).build();
-        when(shelfRepository.findById(10L)).thenReturn(Optional.of(shelf));
+  @Test
+  void getFilterOptions_withShelfId_otherPrivateShelf_throwsForbidden() {
+    mockAdminUser();
+    ShelfEntity shelf =
+        ShelfEntity.builder()
+            .id(10L)
+            .isPublic(false)
+            .user(BookLoreUserEntity.builder().id(99L).build())
+            .build();
+    when(shelfRepository.findById(10L)).thenReturn(Optional.of(shelf));
 
-        assertThrows(APIException.class, () -> service.getFilterOptions(null, 10L, null));
-    }
+    assertThrows(APIException.class, () -> service.getFilterOptions(null, 10L, null));
+  }
 
-    @Test
-    void getFilterOptions_withShelfId_notFound_throwsException() {
-        mockAdminUser();
-        when(shelfRepository.findById(10L)).thenReturn(Optional.empty());
+  @Test
+  void getFilterOptions_withShelfId_notFound_throwsException() {
+    mockAdminUser();
+    when(shelfRepository.findById(10L)).thenReturn(Optional.empty());
 
-        assertThrows(APIException.class, () -> service.getFilterOptions(null, 10L, null));
-    }
+    assertThrows(APIException.class, () -> service.getFilterOptions(null, 10L, null));
+  }
 
-    // -------------------------------------------------------------------------
-    // Magic shelf scoping
-    // -------------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Magic shelf scoping
+  // -------------------------------------------------------------------------
 
-    @Test
-    void getFilterOptions_withMagicShelfId_emptyResult_returnsEmptyOptions() {
-        mockAdminUser();
-        mockMagicShelfBooks(7L, Collections.emptyList());
+  @Test
+  void getFilterOptions_withMagicShelfId_emptyResult_returnsEmptyOptions() {
+    mockAdminUser();
+    mockMagicShelfBooks(7L, Collections.emptyList());
 
-        AppFilterOptions result = service.getFilterOptions(null, null, 7L);
+    AppFilterOptions result = service.getFilterOptions(null, null, 7L);
 
-        assertNotNull(result);
-        assertTrue(result.getAuthors().isEmpty());
-        assertTrue(result.getLanguages().isEmpty());
-        assertTrue(result.getFileTypes().isEmpty());
-        assertFalse(result.getReadStatuses().isEmpty());
-    }
+    assertNotNull(result);
+    assertTrue(result.getAuthors().isEmpty());
+    assertTrue(result.getLanguages().isEmpty());
+    assertTrue(result.getFileTypes().isEmpty());
+    assertFalse(result.getReadStatuses().isEmpty());
+  }
 
-    @Test
-    void getFilterOptions_withMagicShelfId_withBooks_returnsFilteredOptions() {
-        mockAdminUser();
-        Book book1 = Book.builder().id(100L).build();
-        Book book2 = Book.builder().id(200L).build();
-        mockMagicShelfBooks(7L, List.of(book1, book2));
-        mockJpqlQueries();
+  @Test
+  void getFilterOptions_withMagicShelfId_withBooks_returnsFilteredOptions() {
+    mockAdminUser();
+    Book book1 = Book.builder().id(100L).build();
+    Book book2 = Book.builder().id(200L).build();
+    mockMagicShelfBooks(7L, List.of(book1, book2));
+    mockJpqlQueries();
 
-        AppFilterOptions result = service.getFilterOptions(null, null, 7L);
+    AppFilterOptions result = service.getFilterOptions(null, null, 7L);
 
-        assertNotNull(result);
-        verify(magicShelfBookService).getBooksByMagicShelfId(eq(userId), eq(7L), eq(0), anyInt());
-    }
+    assertNotNull(result);
+    verify(magicShelfBookService).getBooksByMagicShelfId(eq(userId), eq(7L), eq(0), anyInt());
+  }
 
-    @Test
-    void getFilterOptions_withMagicShelfId_serviceThrows_propagatesException() {
-        mockAdminUser();
-        when(magicShelfBookService.getBooksByMagicShelfId(eq(userId), eq(7L), eq(0), anyInt()))
-                .thenThrow(new RuntimeException("Magic shelf not found"));
+  @Test
+  void getFilterOptions_withMagicShelfId_serviceThrows_propagatesException() {
+    mockAdminUser();
+    when(magicShelfBookService.getBooksByMagicShelfId(eq(userId), eq(7L), eq(0), anyInt()))
+        .thenThrow(new RuntimeException("Magic shelf not found"));
 
-        assertThrows(RuntimeException.class, () -> service.getFilterOptions(null, null, 7L));
-    }
+    assertThrows(RuntimeException.class, () -> service.getFilterOptions(null, null, 7L));
+  }
 
-    // -------------------------------------------------------------------------
-    // Helpers
-    // -------------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Helpers
+  // -------------------------------------------------------------------------
 
-    private void mockAdminUser() {
-        var permissions = new BookLoreUser.UserPermissions();
-        permissions.setAdmin(true);
-        BookLoreUser user = BookLoreUser.builder()
-                .id(userId)
-                .permissions(permissions)
-                .build();
-        when(authenticationService.getAuthenticatedUser()).thenReturn(user);
-    }
+  private void mockAdminUser() {
+    var permissions = new BookLoreUser.UserPermissions();
+    permissions.setAdmin(true);
+    BookLoreUser user = BookLoreUser.builder().id(userId).permissions(permissions).build();
+    when(authenticationService.getAuthenticatedUser()).thenReturn(user);
+  }
 
-    private void mockNonAdminUser(Set<Long> libraryIds) {
-        List<Library> assignedLibraries = libraryIds.stream()
-                .map(id -> Library.builder().id(id).build())
-                .toList();
-        var permissions = new BookLoreUser.UserPermissions();
-        permissions.setAdmin(false);
-        BookLoreUser user = BookLoreUser.builder()
-                .id(userId)
-                .permissions(permissions)
-                .assignedLibraries(assignedLibraries)
-                .build();
-        when(authenticationService.getAuthenticatedUser()).thenReturn(user);
-    }
+  private void mockNonAdminUser(Set<Long> libraryIds) {
+    List<Library> assignedLibraries =
+        libraryIds.stream().map(id -> Library.builder().id(id).build()).toList();
+    var permissions = new BookLoreUser.UserPermissions();
+    permissions.setAdmin(false);
+    BookLoreUser user =
+        BookLoreUser.builder()
+            .id(userId)
+            .permissions(permissions)
+            .assignedLibraries(assignedLibraries)
+            .build();
+    when(authenticationService.getAuthenticatedUser()).thenReturn(user);
+  }
 
-    private void mockMagicShelfBooks(Long magicShelfId, List<Book> books) {
-        var page = new PageImpl<>(books, PageRequest.of(0, Math.max(books.size(), 1)), books.size());
-        when(magicShelfBookService.getBooksByMagicShelfId(eq(userId), eq(magicShelfId), eq(0), anyInt()))
-                .thenReturn(page);
-    }
+  private void mockMagicShelfBooks(Long magicShelfId, List<Book> books) {
+    var page = new PageImpl<>(books, PageRequest.of(0, Math.max(books.size(), 1)), books.size());
+    when(magicShelfBookService.getBooksByMagicShelfId(
+            eq(userId), eq(magicShelfId), eq(0), anyInt()))
+        .thenReturn(page);
+  }
 
-    @SuppressWarnings("unchecked")
-    private void mockJpqlQueries() {
-        TypedQuery<Tuple> authorQuery = mock(TypedQuery.class);
-        when(authorQuery.setMaxResults(anyInt())).thenReturn(authorQuery);
-        when(authorQuery.setParameter(anyString(), any())).thenReturn(authorQuery);
-        when(authorQuery.getResultList()).thenReturn(Collections.emptyList());
+  @SuppressWarnings("unchecked")
+  private void mockJpqlQueries() {
+    TypedQuery<Tuple> authorQuery = mock(TypedQuery.class);
+    when(authorQuery.setMaxResults(anyInt())).thenReturn(authorQuery);
+    when(authorQuery.setParameter(anyString(), any())).thenReturn(authorQuery);
+    when(authorQuery.getResultList()).thenReturn(Collections.emptyList());
 
-        TypedQuery<Tuple> langQuery = mock(TypedQuery.class);
-        when(langQuery.setParameter(anyString(), any())).thenReturn(langQuery);
-        when(langQuery.getResultList()).thenReturn(Collections.emptyList());
+    TypedQuery<Tuple> langQuery = mock(TypedQuery.class);
+    when(langQuery.setParameter(anyString(), any())).thenReturn(langQuery);
+    when(langQuery.getResultList()).thenReturn(Collections.emptyList());
 
-        TypedQuery<BookFileType> ftQuery = mock(TypedQuery.class);
-        when(ftQuery.setParameter(anyString(), any())).thenReturn(ftQuery);
-        when(ftQuery.getResultList()).thenReturn(Collections.emptyList());
+    TypedQuery<BookFileType> ftQuery = mock(TypedQuery.class);
+    when(ftQuery.setParameter(anyString(), any())).thenReturn(ftQuery);
+    when(ftQuery.getResultList()).thenReturn(Collections.emptyList());
 
-        when(entityManager.createQuery(anyString(), eq(Tuple.class)))
-                .thenReturn(authorQuery)
-                .thenReturn(langQuery);
-        when(entityManager.createQuery(anyString(), eq(BookFileType.class)))
-                .thenReturn(ftQuery);
-    }
+    when(entityManager.createQuery(anyString(), eq(Tuple.class)))
+        .thenReturn(authorQuery)
+        .thenReturn(langQuery);
+    when(entityManager.createQuery(anyString(), eq(BookFileType.class))).thenReturn(ftQuery);
+  }
 }

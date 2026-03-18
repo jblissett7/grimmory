@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CbxPageInfo {
-    private int pageNumber;
-    private String displayName;
+  private int pageNumber;
+  private String displayName;
 }

@@ -1,7 +1,8 @@
 package org.booklore.repository;
 
+import java.time.Instant;
+import java.util.List;
 import org.booklore.model.dto.*;
-
 import org.booklore.model.entity.ReadingSessionEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,13 +11,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.Instant;
-import java.util.List;
-
 @Repository
 public interface ReadingSessionRepository extends JpaRepository<ReadingSessionEntity, Long> {
 
-    @Query(value = """
+  @Query(
+      value =
+          """
             SELECT DATE(CONVERT_TZ(start_time, '+00:00', :tzOffset)) as date,
                    COUNT(*) as count
             FROM reading_sessions
@@ -24,13 +24,14 @@ public interface ReadingSessionRepository extends JpaRepository<ReadingSessionEn
             AND YEAR(CONVERT_TZ(start_time, '+00:00', :tzOffset)) = :year
             GROUP BY DATE(CONVERT_TZ(start_time, '+00:00', :tzOffset))
             ORDER BY date
-            """, nativeQuery = true)
-    List<ReadingSessionCountDto> findSessionCountsByUserAndYear(
-            @Param("userId") Long userId,
-            @Param("year") int year,
-            @Param("tzOffset") String tzOffset);
+            """,
+      nativeQuery = true)
+  List<ReadingSessionCountDto> findSessionCountsByUserAndYear(
+      @Param("userId") Long userId, @Param("year") int year, @Param("tzOffset") String tzOffset);
 
-    @Query(value = """
+  @Query(
+      value =
+          """
             SELECT DATE(CONVERT_TZ(start_time, '+00:00', :tzOffset)) as date,
                    COUNT(*) as count
             FROM reading_sessions
@@ -39,14 +40,16 @@ public interface ReadingSessionRepository extends JpaRepository<ReadingSessionEn
             AND MONTH(CONVERT_TZ(start_time, '+00:00', :tzOffset)) = :month
             GROUP BY DATE(CONVERT_TZ(start_time, '+00:00', :tzOffset))
             ORDER BY date
-            """, nativeQuery = true)
-    List<ReadingSessionCountDto> findSessionCountsByUserAndYearAndMonth(
-            @Param("userId") Long userId,
-            @Param("year") int year,
-            @Param("month") int month,
-            @Param("tzOffset") String tzOffset);
+            """,
+      nativeQuery = true)
+  List<ReadingSessionCountDto> findSessionCountsByUserAndYearAndMonth(
+      @Param("userId") Long userId,
+      @Param("year") int year,
+      @Param("month") int month,
+      @Param("tzOffset") String tzOffset);
 
-        @Query("""
+  @Query(
+      """
                         SELECT
                                 b.id as bookId,
                                 COALESCE(b.metadata.title,
@@ -63,12 +66,13 @@ public interface ReadingSessionRepository extends JpaRepository<ReadingSessionEn
                         AND rs.startTime >= :startOfWeek AND rs.startTime < :endOfWeek
                         ORDER BY rs.startTime
                         """)
-    List<ReadingSessionTimelineDto> findSessionTimelineByUserAndWeek(
-            @Param("userId") Long userId,
-            @Param("startOfWeek") Instant startOfWeek,
-            @Param("endOfWeek") Instant endOfWeek);
+  List<ReadingSessionTimelineDto> findSessionTimelineByUserAndWeek(
+      @Param("userId") Long userId,
+      @Param("startOfWeek") Instant startOfWeek,
+      @Param("endOfWeek") Instant endOfWeek);
 
-    @Query("""
+  @Query(
+      """
             SELECT
                 CAST(rs.createdAt AS LocalDate) as date,
                 AVG(rs.progressDelta / (rs.durationSeconds / 60.0)) as avgProgressPerMinute,
@@ -81,9 +85,12 @@ public interface ReadingSessionRepository extends JpaRepository<ReadingSessionEn
             GROUP BY CAST(rs.createdAt AS LocalDate)
             ORDER BY date
             """)
-    List<ReadingSpeedDto> findReadingSpeedByUserAndYear(@Param("userId") Long userId, @Param("year") int year);
+  List<ReadingSpeedDto> findReadingSpeedByUserAndYear(
+      @Param("userId") Long userId, @Param("year") int year);
 
-    @Query(value = """
+  @Query(
+      value =
+          """
             SELECT
                 HOUR(CONVERT_TZ(start_time, '+00:00', :tzOffset)) as hourOfDay,
                 COUNT(*) as sessionCount,
@@ -94,14 +101,17 @@ public interface ReadingSessionRepository extends JpaRepository<ReadingSessionEn
             AND (:month IS NULL OR MONTH(CONVERT_TZ(start_time, '+00:00', :tzOffset)) = :month)
             GROUP BY HOUR(CONVERT_TZ(start_time, '+00:00', :tzOffset))
             ORDER BY hourOfDay
-            """, nativeQuery = true)
-    List<PeakReadingHourDto> findPeakReadingHoursByUser(
-            @Param("userId") Long userId,
-            @Param("year") Integer year,
-            @Param("month") Integer month,
-            @Param("tzOffset") String tzOffset);
+            """,
+      nativeQuery = true)
+  List<PeakReadingHourDto> findPeakReadingHoursByUser(
+      @Param("userId") Long userId,
+      @Param("year") Integer year,
+      @Param("month") Integer month,
+      @Param("tzOffset") String tzOffset);
 
-    @Query(value = """
+  @Query(
+      value =
+          """
             SELECT
                 DAYOFWEEK(CONVERT_TZ(start_time, '+00:00', :tzOffset)) as dayOfWeek,
                 COUNT(*) as sessionCount,
@@ -112,14 +122,16 @@ public interface ReadingSessionRepository extends JpaRepository<ReadingSessionEn
             AND (:month IS NULL OR MONTH(CONVERT_TZ(start_time, '+00:00', :tzOffset)) = :month)
             GROUP BY DAYOFWEEK(CONVERT_TZ(start_time, '+00:00', :tzOffset))
             ORDER BY dayOfWeek
-            """, nativeQuery = true)
-    List<FavoriteReadingDayDto> findFavoriteReadingDaysByUser(
-            @Param("userId") Long userId,
-            @Param("year") Integer year,
-            @Param("month") Integer month,
-            @Param("tzOffset") String tzOffset);
+            """,
+      nativeQuery = true)
+  List<FavoriteReadingDayDto> findFavoriteReadingDaysByUser(
+      @Param("userId") Long userId,
+      @Param("year") Integer year,
+      @Param("month") Integer month,
+      @Param("tzOffset") String tzOffset);
 
-    @Query("""
+  @Query(
+      """
             SELECT
                 c.name as genre,
                 COUNT(DISTINCT b.id) as bookCount,
@@ -132,21 +144,21 @@ public interface ReadingSessionRepository extends JpaRepository<ReadingSessionEn
             GROUP BY c.name
             ORDER BY totalSessions DESC
             """)
-    List<GenreStatisticsDto> findGenreStatisticsByUser(@Param("userId") Long userId);
+  List<GenreStatisticsDto> findGenreStatisticsByUser(@Param("userId") Long userId);
 
-    @Query("""
+  @Query(
+      """
             SELECT rs
             FROM ReadingSessionEntity rs
             WHERE rs.user.id = :userId
             AND rs.book.id = :bookId
             ORDER BY rs.startTime DESC
             """)
-    Page<ReadingSessionEntity> findByUserIdAndBookId(
-            @Param("userId") Long userId,
-            @Param("bookId") Long bookId,
-            Pageable pageable);
+  Page<ReadingSessionEntity> findByUserIdAndBookId(
+      @Param("userId") Long userId, @Param("bookId") Long bookId, Pageable pageable);
 
-    @Query("""
+  @Query(
+      """
             SELECT
                 b.id as bookId,
                 COALESCE(b.metadata.title, 'Unknown Book') as bookTitle,
@@ -164,9 +176,10 @@ public interface ReadingSessionRepository extends JpaRepository<ReadingSessionEn
             AND COALESCE(ubp.dateFinished, ubp.readStatusModifiedTime, ubp.lastReadTime) IS NOT NULL
             ORDER BY b.id, rs.startTime ASC
             """)
-    List<PageTurnerSessionDto> findPageTurnerSessionsByUser(@Param("userId") Long userId);
+  List<PageTurnerSessionDto> findPageTurnerSessionsByUser(@Param("userId") Long userId);
 
-    @Query("""
+  @Query(
+      """
             SELECT
                 b.id as bookId,
                 COALESCE(b.metadata.title, 'Unknown Book') as bookTitle,
@@ -181,23 +194,26 @@ public interface ReadingSessionRepository extends JpaRepository<ReadingSessionEn
             AND rs.endProgress IS NOT NULL
             ORDER BY b.id, rs.startTime ASC
             """)
-    List<CompletionRaceSessionDto> findCompletionRaceSessionsByUserAndYear(
-            @Param("userId") Long userId,
-            @Param("year") int year);
+  List<CompletionRaceSessionDto> findCompletionRaceSessionsByUserAndYear(
+      @Param("userId") Long userId, @Param("year") int year);
 
-    @Query(value = """
+  @Query(
+      value =
+          """
             SELECT DATE(CONVERT_TZ(start_time, '+00:00', :tzOffset)) as date,
                    COUNT(*) as count
             FROM reading_sessions
             WHERE user_id = :userId
             GROUP BY DATE(CONVERT_TZ(start_time, '+00:00', :tzOffset))
             ORDER BY date
-            """, nativeQuery = true)
-    List<ReadingSessionCountDto> findAllSessionCountsByUser(
-            @Param("userId") Long userId,
-            @Param("tzOffset") String tzOffset);
+            """,
+      nativeQuery = true)
+  List<ReadingSessionCountDto> findAllSessionCountsByUser(
+      @Param("userId") Long userId, @Param("tzOffset") String tzOffset);
 
-    @Query(value = """
+  @Query(
+      value =
+          """
             SELECT
                 HOUR(CONVERT_TZ(rs.start_time, '+00:00', :tzOffset))
                     + MINUTE(CONVERT_TZ(rs.start_time, '+00:00', :tzOffset)) / 60.0 as hourOfDay,
@@ -208,17 +224,18 @@ public interface ReadingSessionRepository extends JpaRepository<ReadingSessionEn
             AND YEAR(CONVERT_TZ(rs.start_time, '+00:00', :tzOffset)) = :year
             ORDER BY rs.start_time DESC
             LIMIT 500
-            """, nativeQuery = true)
-    List<SessionScatterDto> findSessionScatterByUserAndYear(
-            @Param("userId") Long userId,
-            @Param("year") int year,
-            @Param("tzOffset") String tzOffset);
+            """,
+      nativeQuery = true)
+  List<SessionScatterDto> findSessionScatterByUserAndYear(
+      @Param("userId") Long userId, @Param("year") int year, @Param("tzOffset") String tzOffset);
 
-    // ========================================================================
-    // Listening (audiobook) stats
-    // ========================================================================
+  // ========================================================================
+  // Listening (audiobook) stats
+  // ========================================================================
 
-    @Query(value = """
+  @Query(
+      value =
+          """
             SELECT DATE(CONVERT_TZ(start_time, '+00:00', :tzOffset)) as date,
                    COUNT(*) as sessions,
                    COALESCE(ROUND(SUM(duration_seconds) / 60.0), 0) as durationMinutes
@@ -229,14 +246,17 @@ public interface ReadingSessionRepository extends JpaRepository<ReadingSessionEn
             AND MONTH(CONVERT_TZ(start_time, '+00:00', :tzOffset)) = :month
             GROUP BY DATE(CONVERT_TZ(start_time, '+00:00', :tzOffset))
             ORDER BY date
-            """, nativeQuery = true)
-    List<ListeningHeatmapDto> findListeningSessionsByUserAndMonth(
-            @Param("userId") Long userId,
-            @Param("year") int year,
-            @Param("month") int month,
-            @Param("tzOffset") String tzOffset);
+            """,
+      nativeQuery = true)
+  List<ListeningHeatmapDto> findListeningSessionsByUserAndMonth(
+      @Param("userId") Long userId,
+      @Param("year") int year,
+      @Param("month") int month,
+      @Param("tzOffset") String tzOffset);
 
-    @Query(value = """
+  @Query(
+      value =
+          """
             SELECT YEAR(CONVERT_TZ(start_time, '+00:00', :tzOffset)) as year,
                    WEEK(CONVERT_TZ(start_time, '+00:00', :tzOffset), 3) as week,
                    COALESCE(SUM(duration_seconds), 0) as totalDurationSeconds,
@@ -247,13 +267,14 @@ public interface ReadingSessionRepository extends JpaRepository<ReadingSessionEn
             AND CONVERT_TZ(start_time, '+00:00', :tzOffset) >= DATE_SUB(NOW(), INTERVAL :weeks WEEK)
             GROUP BY year, week
             ORDER BY year, week
-            """, nativeQuery = true)
-    List<WeeklyListeningTrendDto> findWeeklyListeningTrend(
-            @Param("userId") Long userId,
-            @Param("weeks") int weeks,
-            @Param("tzOffset") String tzOffset);
+            """,
+      nativeQuery = true)
+  List<WeeklyListeningTrendDto> findWeeklyListeningTrend(
+      @Param("userId") Long userId, @Param("weeks") int weeks, @Param("tzOffset") String tzOffset);
 
-    @Query(value = """
+  @Query(
+      value =
+          """
             SELECT rs.book_id as bookId,
                    COALESCE(bm.title, 'Unknown') as title,
                    COALESCE(MAX(rs.end_progress), 0) as maxProgress,
@@ -266,10 +287,13 @@ public interface ReadingSessionRepository extends JpaRepository<ReadingSessionEn
             WHERE rs.user_id = :userId
             AND rs.book_type = 'AUDIOBOOK'
             GROUP BY rs.book_id, bm.title
-            """, nativeQuery = true)
-    List<AudiobookProgressDto> findAudiobookProgressByUser(@Param("userId") Long userId);
+            """,
+      nativeQuery = true)
+  List<AudiobookProgressDto> findAudiobookProgressByUser(@Param("userId") Long userId);
 
-    @Query(value = """
+  @Query(
+      value =
+          """
             SELECT YEAR(COALESCE(ubp.date_finished, ubp.read_status_modified_time)) as year,
                    MONTH(COALESCE(ubp.date_finished, ubp.read_status_modified_time)) as month,
                    COUNT(*) as booksCompleted
@@ -285,10 +309,13 @@ public interface ReadingSessionRepository extends JpaRepository<ReadingSessionEn
             )
             GROUP BY year, month
             ORDER BY year DESC, month DESC
-            """, nativeQuery = true)
-    List<MonthlyCompletedAudiobookDto> findMonthlyCompletedAudiobooks(@Param("userId") Long userId);
+            """,
+      nativeQuery = true)
+  List<MonthlyCompletedAudiobookDto> findMonthlyCompletedAudiobooks(@Param("userId") Long userId);
 
-    @Query(value = """
+  @Query(
+      value =
+          """
             SELECT YEAR(CONVERT_TZ(start_time, '+00:00', :tzOffset)) as year,
                    MONTH(CONVERT_TZ(start_time, '+00:00', :tzOffset)) as month,
                    COALESCE(SUM(duration_seconds), 0) as totalDurationSeconds
@@ -297,12 +324,14 @@ public interface ReadingSessionRepository extends JpaRepository<ReadingSessionEn
             AND book_type = 'AUDIOBOOK'
             GROUP BY year, month
             ORDER BY year DESC, month DESC
-            """, nativeQuery = true)
-    List<MonthlyListeningDurationDto> findMonthlyListeningDurations(
-            @Param("userId") Long userId,
-            @Param("tzOffset") String tzOffset);
+            """,
+      nativeQuery = true)
+  List<MonthlyListeningDurationDto> findMonthlyListeningDurations(
+      @Param("userId") Long userId, @Param("tzOffset") String tzOffset);
 
-    @Query(value = """
+  @Query(
+      value =
+          """
             SELECT
                 HOUR(CONVERT_TZ(start_time, '+00:00', :tzOffset)) as hourOfDay,
                 COUNT(*) as sessionCount,
@@ -314,14 +343,16 @@ public interface ReadingSessionRepository extends JpaRepository<ReadingSessionEn
             AND (:month IS NULL OR MONTH(CONVERT_TZ(start_time, '+00:00', :tzOffset)) = :month)
             GROUP BY HOUR(CONVERT_TZ(start_time, '+00:00', :tzOffset))
             ORDER BY hourOfDay
-            """, nativeQuery = true)
-    List<PeakReadingHourDto> findListeningPeakHoursByUser(
-            @Param("userId") Long userId,
-            @Param("year") Integer year,
-            @Param("month") Integer month,
-            @Param("tzOffset") String tzOffset);
+            """,
+      nativeQuery = true)
+  List<PeakReadingHourDto> findListeningPeakHoursByUser(
+      @Param("userId") Long userId,
+      @Param("year") Integer year,
+      @Param("month") Integer month,
+      @Param("tzOffset") String tzOffset);
 
-    @Query("""
+  @Query(
+      """
             SELECT
                 c.name as genre,
                 COUNT(DISTINCT b.id) as bookCount,
@@ -335,9 +366,11 @@ public interface ReadingSessionRepository extends JpaRepository<ReadingSessionEn
             GROUP BY c.name
             ORDER BY totalDurationSeconds DESC
             """)
-    List<GenreStatisticsDto> findListeningGenreStatisticsByUser(@Param("userId") Long userId);
+  List<GenreStatisticsDto> findListeningGenreStatisticsByUser(@Param("userId") Long userId);
 
-    @Query(value = """
+  @Query(
+      value =
+          """
             SELECT a.name as authorName,
                    COUNT(DISTINCT rs.book_id) as bookCount,
                    COUNT(*) as totalSessions,
@@ -349,10 +382,13 @@ public interface ReadingSessionRepository extends JpaRepository<ReadingSessionEn
             AND rs.book_type = 'AUDIOBOOK'
             GROUP BY a.name
             ORDER BY totalDurationSeconds DESC
-            """, nativeQuery = true)
-    List<ListeningAuthorDto> findListeningAuthorStatsByUser(@Param("userId") Long userId);
+            """,
+      nativeQuery = true)
+  List<ListeningAuthorDto> findListeningAuthorStatsByUser(@Param("userId") Long userId);
 
-    @Query(value = """
+  @Query(
+      value =
+          """
             SELECT
                 HOUR(CONVERT_TZ(rs.start_time, '+00:00', :tzOffset))
                     + MINUTE(CONVERT_TZ(rs.start_time, '+00:00', :tzOffset)) / 60.0 as hourOfDay,
@@ -363,12 +399,14 @@ public interface ReadingSessionRepository extends JpaRepository<ReadingSessionEn
             AND rs.book_type = 'AUDIOBOOK'
             ORDER BY rs.start_time DESC
             LIMIT 500
-            """, nativeQuery = true)
-    List<SessionScatterDto> findListeningSessionScatterByUser(
-            @Param("userId") Long userId,
-            @Param("tzOffset") String tzOffset);
+            """,
+      nativeQuery = true)
+  List<SessionScatterDto> findListeningSessionScatterByUser(
+      @Param("userId") Long userId, @Param("tzOffset") String tzOffset);
 
-    @Query(value = """
+  @Query(
+      value =
+          """
             SELECT rs.book_id as bookId,
                    COALESCE(bm.title, 'Unknown') as title,
                    bm.page_count as pageCount,
@@ -386,9 +424,8 @@ public interface ReadingSessionRepository extends JpaRepository<ReadingSessionEn
             AND YEAR(CONVERT_TZ(rs.start_time, '+00:00', :tzOffset)) = :year
             GROUP BY rs.book_id, bm.title, bm.page_count, ubp.read_status
             ORDER BY firstSessionDate
-            """, nativeQuery = true)
-    List<BookTimelineDto> findBookTimelineByUserAndYear(
-            @Param("userId") Long userId,
-            @Param("year") int year,
-            @Param("tzOffset") String tzOffset);
+            """,
+      nativeQuery = true)
+  List<BookTimelineDto> findBookTimelineByUserAndYear(
+      @Param("userId") Long userId, @Param("year") int year, @Param("tzOffset") String tzOffset);
 }

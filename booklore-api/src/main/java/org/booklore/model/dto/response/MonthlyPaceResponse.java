@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MonthlyPaceResponse {
-    private Integer year;
-    private Integer month;
-    private Long booksCompleted;
-    private Long totalListeningSeconds;
+  private Integer year;
+  private Integer month;
+  private Long booksCompleted;
+  private Long totalListeningSeconds;
 }

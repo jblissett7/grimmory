@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskCronConfigRequest {
-    private String cronExpression;
-    private Boolean enabled;
+  private String cronExpression;
+  private Boolean enabled;
 }
-

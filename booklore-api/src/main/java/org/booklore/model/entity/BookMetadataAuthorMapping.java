@@ -15,19 +15,19 @@ import lombok.Setter;
 @IdClass(BookMetadataAuthorKey.class)
 public class BookMetadataAuthorMapping {
 
-    @Id
-    @Column(name = "book_id")
-    private Long bookId;
+  @Id
+  @Column(name = "book_id")
+  private Long bookId;
 
-    @Id
-    @Column(name = "author_id")
-    private Long authorId;
+  @Id
+  @Column(name = "author_id")
+  private Long authorId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id", insertable = false, updatable = false)
-    private BookMetadataEntity book;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "book_id", insertable = false, updatable = false)
+  private BookMetadataEntity book;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id", insertable = false, updatable = false)
-    private AuthorEntity author;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "author_id", insertable = false, updatable = false)
+  private AuthorEntity author;
 }

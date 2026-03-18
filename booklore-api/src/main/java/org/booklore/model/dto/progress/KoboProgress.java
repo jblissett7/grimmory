@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class KoboProgress {
-    private Float percentage;
+  private Float percentage;
 }

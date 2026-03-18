@@ -10,11 +10,11 @@ import tools.jackson.databind.ObjectMapper;
 @Component
 public class KoboResourcesComponent {
 
-    private final ObjectMapper objectMapper;
+  private final ObjectMapper objectMapper;
 
-    public JsonNode getResources() throws JacksonException {
-        return objectMapper.readTree(
-                """
+  public JsonNode getResources() throws JacksonException {
+    return objectMapper.readTree(
+        """
                          {
                              "account_page": "https://www.kobo.com/account/settings",
                              "account_page_rakuten": "https://my.rakuten.co.jp/",
@@ -183,7 +183,6 @@ public class KoboResourcesComponent {
                              "userguide_host": "https://ereaderfiles.kobo.com",
                              "wishlist_page": "https://www.kobo.com/{region}/{language}/account/wishlist"
                            }
-                        """
-        );
-    }
+                        """);
+  }
 }

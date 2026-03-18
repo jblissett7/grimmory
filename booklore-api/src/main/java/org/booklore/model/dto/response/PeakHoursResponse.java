@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PeakHoursResponse {
-    private Integer hourOfDay;
-    private Long sessionCount;
-    private Long totalDurationSeconds;
+  private Integer hourOfDay;
+  private Long sessionCount;
+  private Long totalDurationSeconds;
 }
-

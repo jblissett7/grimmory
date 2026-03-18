@@ -14,5 +14,5 @@ import tools.jackson.databind.annotation.JsonNaming;
 @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
 public class ChangedEntitlement implements Entitlement {
 
-    private BookEntitlementContainer changedEntitlement;
+  private BookEntitlementContainer changedEntitlement;
 }

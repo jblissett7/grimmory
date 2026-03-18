@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PersonalRatingUpdateResponse {
-    private Long bookId;
-    private Integer personalRating;
+  private Long bookId;
+  private Integer personalRating;
 }
-

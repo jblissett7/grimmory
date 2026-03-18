@@ -1,14 +1,13 @@
 package org.booklore.model.dto.komga;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.time.Instant;
 
 @Data
 @Builder
@@ -16,19 +15,17 @@ import java.time.Instant;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class KomgaBookMetadataAggregationDto {
-    @Builder.Default
-    private List<KomgaAuthorDto> authors = new ArrayList<>();
-    
-    @Builder.Default
-    private List<String> tags = new ArrayList<>();
-    
-    private String releaseDate;
-    
-    private String summary;
-    private String summaryNumber;
-    
-    private Boolean summaryLock;
+  @Builder.Default private List<KomgaAuthorDto> authors = new ArrayList<>();
 
-    private Instant created;
-    private Instant lastModified;
+  @Builder.Default private List<String> tags = new ArrayList<>();
+
+  private String releaseDate;
+
+  private String summary;
+  private String summaryNumber;
+
+  private Boolean summaryLock;
+
+  private Instant created;
+  private Instant lastModified;
 }

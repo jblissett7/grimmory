@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EpubSpineItem {
-    private String idref;
-    private String href;
-    private String mediaType;
-    private boolean linear;
+  private String idref;
+  private String href;
+  private String mediaType;
+  private boolean linear;
 }

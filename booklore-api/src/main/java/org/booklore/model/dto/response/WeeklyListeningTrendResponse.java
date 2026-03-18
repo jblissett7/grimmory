@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WeeklyListeningTrendResponse {
-    private Integer year;
-    private Integer week;
-    private Long totalDurationSeconds;
-    private Long sessions;
+  private Integer year;
+  private Integer week;
+  private Long totalDurationSeconds;
+  private Long sessions;
 }

@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookViewerSettings {
-    private PdfViewerPreferences pdfSettings;
-    private NewPdfViewerPreferences newPdfSettings;
-    private EbookViewerPreferences ebookSettings;
-    private CbxViewerPreferences cbxSettings;
+  private PdfViewerPreferences pdfSettings;
+  private NewPdfViewerPreferences newPdfSettings;
+  private EbookViewerPreferences ebookSettings;
+  private CbxViewerPreferences cbxSettings;
 }

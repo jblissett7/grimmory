@@ -9,6 +9,6 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface LibraryMapper {
 
-    @Mapping(target = "paths", source = "libraryPaths")
-    Library toLibrary(LibraryEntity libraryEntity);
+  @Mapping(target = "paths", source = "libraryPaths")
+  Library toLibrary(LibraryEntity libraryEntity);
 }

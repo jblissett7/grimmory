@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookCompletionHeatmapResponse {
-    private Integer year;
-    private Integer month;
-    private Long count;
+  private Integer year;
+  private Integer month;
+  private Long count;
 }

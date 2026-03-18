@@ -16,15 +16,15 @@ import tools.jackson.databind.annotation.JsonNaming;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class KoboTagWrapper implements Entitlement {
 
-    private WrappedTag changedTag;
-    private WrappedTag deletedTag;
+  private WrappedTag changedTag;
+  private WrappedTag deletedTag;
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
-    public static class WrappedTag {
-        private KoboTag tag;
-    }
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder
+  @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
+  public static class WrappedTag {
+    private KoboTag tag;
+  }
 }

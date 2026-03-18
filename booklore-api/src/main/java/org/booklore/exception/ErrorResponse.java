@@ -1,12 +1,11 @@
 package org.booklore.exception;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.AllArgsConstructor;
-
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -14,23 +13,21 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse {
 
-    private int status;
-    private String message;
-    private LocalDateTime timestamp;
-    private List<String> details;
+  private int status;
+  private String message;
+  private LocalDateTime timestamp;
+  private List<String> details;
 
-    public ErrorResponse(int status, String message) {
-        this.status = status;
-        this.message = message;
-        this.timestamp = LocalDateTime.now();
-    }
+  public ErrorResponse(int status, String message) {
+    this.status = status;
+    this.message = message;
+    this.timestamp = LocalDateTime.now();
+  }
 
-    public ErrorResponse(int status, String message, List<String> details) {
-        this.status = status;
-        this.message = message;
-        this.timestamp = LocalDateTime.now();
-        this.details = details;
-    }
+  public ErrorResponse(int status, String message, List<String> details) {
+    this.status = status;
+    this.message = message;
+    this.timestamp = LocalDateTime.now();
+    this.details = details;
+  }
 }
-
-

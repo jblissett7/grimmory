@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SidecarSettings {
-    private boolean enabled;
-    private boolean writeOnUpdate;
-    private boolean writeOnScan;
-    private boolean includeCoverFile;
+  private boolean enabled;
+  private boolean writeOnUpdate;
+  private boolean writeOnScan;
+  private boolean includeCoverFile;
 }

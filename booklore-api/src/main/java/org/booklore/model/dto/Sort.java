@@ -1,10 +1,10 @@
 package org.booklore.model.dto;
 
-import org.booklore.model.enums.SortDirection;
 import lombok.Data;
+import org.booklore.model.enums.SortDirection;
 
 @Data
 public class Sort {
-    private String field;
-    private SortDirection direction;
+  private String field;
+  private SortDirection direction;
 }

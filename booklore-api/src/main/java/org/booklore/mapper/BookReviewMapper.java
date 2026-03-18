@@ -8,10 +8,9 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface BookReviewMapper {
 
-    BookReview toDto(BookReviewEntity entity);
+  BookReview toDto(BookReviewEntity entity);
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "bookMetadata", ignore = true)
-    BookReviewEntity toEntity(BookReview dto);
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "bookMetadata", ignore = true)
+  BookReviewEntity toEntity(BookReview dto);
 }
-

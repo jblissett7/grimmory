@@ -1,11 +1,10 @@
 package org.booklore.model.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import lombok.*;
 
 @Entity
 @Getter
@@ -16,27 +15,26 @@ import java.util.Set;
 @Table(name = "mood")
 public class MoodEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "name", nullable = false, unique = true)
-    private String name;
+  @Column(name = "name", nullable = false, unique = true)
+  private String name;
 
-    @ManyToMany(mappedBy = "moods", fetch = FetchType.LAZY)
-    @Builder.Default
-    private Set<BookMetadataEntity> bookMetadataEntityList = new HashSet<>();
+  @ManyToMany(mappedBy = "moods", fetch = FetchType.LAZY)
+  @Builder.Default
+  private Set<BookMetadataEntity> bookMetadataEntityList = new HashSet<>();
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof MoodEntity that)) return false;
-        return id != null && Objects.equals(id, that.id);
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof MoodEntity that)) return false;
+    return id != null && Objects.equals(id, that.id);
+  }
 
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }
-

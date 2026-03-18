@@ -9,8 +9,8 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface BookEntityToKoboSnapshotBookMapper {
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "bookId", expression = "java(book.getId())")
-    @Mapping(target = "synced", constant = "false")
-    KoboSnapshotBookEntity toKoboSnapshotBook(BookEntity book);
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "bookId", expression = "java(book.getId())")
+  @Mapping(target = "synced", constant = "false")
+  KoboSnapshotBookEntity toKoboSnapshotBook(BookEntity book);
 }

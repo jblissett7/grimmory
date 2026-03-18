@@ -7,8 +7,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PublicAppSetting {
-    private boolean oidcEnabled;
-    private boolean remoteAuthEnabled;
-    private OidcProviderDetails oidcProviderDetails;
-    private boolean oidcForceOnlyMode;
+  private boolean oidcEnabled;
+  private boolean remoteAuthEnabled;
+  private OidcProviderDetails oidcProviderDetails;
+  private boolean oidcForceOnlyMode;
 }

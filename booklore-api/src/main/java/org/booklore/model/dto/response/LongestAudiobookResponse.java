@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LongestAudiobookResponse {
-    private Long bookId;
-    private String title;
-    private Long totalDurationSeconds;
-    private Long listenedDurationSeconds;
-    private Double progressPercent;
+  private Long bookId;
+  private String title;
+  private Long totalDurationSeconds;
+  private Long listenedDurationSeconds;
+  private Double progressPercent;
 }

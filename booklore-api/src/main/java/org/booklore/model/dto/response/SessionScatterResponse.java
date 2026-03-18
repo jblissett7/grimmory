@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SessionScatterResponse {
-    private Double hourOfDay;
-    private Double durationMinutes;
-    private Integer dayOfWeek;
+  private Double hourOfDay;
+  private Double durationMinutes;
+  private Integer dayOfWeek;
 }

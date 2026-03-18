@@ -1,5 +1,11 @@
 package org.booklore.mapper.komga;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import org.booklore.context.KomgaCleanContext;
 import org.booklore.model.dto.komga.KomgaBookDto;
 import org.booklore.model.dto.komga.KomgaSeriesDto;
@@ -18,230 +24,225 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
 class KomgaMapperTest {
 
-    @Mock
-    private AppSettingService appSettingService;
+  @Mock private AppSettingService appSettingService;
 
-    @InjectMocks
-    private KomgaMapper mapper;
-    
-    @AfterEach
-    void cleanup() {
-        // Always clean up the context after each test
-        KomgaCleanContext.clear();
-    }
-    
-    @BeforeEach
-    void setUp() {
-        // Mock app settings for all tests
-        AppSettings appSettings = new AppSettings();
-        appSettings.setKomgaGroupUnknown(true);
-        when(appSettingService.getAppSettings()).thenReturn(appSettings);
-    }
+  @InjectMocks private KomgaMapper mapper;
 
-    @Test
-    void shouldHandleNullPageCountInMetadata() {
-        // Given: A book with metadata that has null pageCount
-        LibraryEntity library = new LibraryEntity();
-        library.setId(1L);
+  @AfterEach
+  void cleanup() {
+    // Always clean up the context after each test
+    KomgaCleanContext.clear();
+  }
 
-        BookMetadataEntity metadata = BookMetadataEntity.builder()
-                .title("Test Book")
-                .seriesName("Test Series")
-                .pageCount(null)  // Explicitly null
-                .build();
+  @BeforeEach
+  void setUp() {
+    // Mock app settings for all tests
+    AppSettings appSettings = new AppSettings();
+    appSettings.setKomgaGroupUnknown(true);
+    when(appSettingService.getAppSettings()).thenReturn(appSettings);
+  }
 
-        BookEntity book = new BookEntity();
-        book.setId(100L);
-        book.setLibrary(library);
-        book.setMetadata(metadata);
-        book.setAddedOn(Instant.now());
+  @Test
+  void shouldHandleNullPageCountInMetadata() {
+    // Given: A book with metadata that has null pageCount
+    LibraryEntity library = new LibraryEntity();
+    library.setId(1L);
 
-        BookFileEntity pdf = new BookFileEntity();
-        pdf.setId(100L);
-        pdf.setBook(book);
-        pdf.setFileSubPath("author/title");
-        pdf.setFileName("test-book.pdf");
-        pdf.setBookType(BookFileType.PDF);
-        pdf.setBookFormat(true);
+    BookMetadataEntity metadata =
+        BookMetadataEntity.builder()
+            .title("Test Book")
+            .seriesName("Test Series")
+            .pageCount(null) // Explicitly null
+            .build();
 
-        book.setBookFiles(List.of(pdf));
+    BookEntity book = new BookEntity();
+    book.setId(100L);
+    book.setLibrary(library);
+    book.setMetadata(metadata);
+    book.setAddedOn(Instant.now());
 
-        // When: Converting to DTO
-        KomgaBookDto dto = mapper.toKomgaBookDto(book);
+    BookFileEntity pdf = new BookFileEntity();
+    pdf.setId(100L);
+    pdf.setBook(book);
+    pdf.setFileSubPath("author/title");
+    pdf.setFileName("test-book.pdf");
+    pdf.setBookType(BookFileType.PDF);
+    pdf.setBookFormat(true);
 
-        // Then: Should not throw NPE and pageCount should default to 0
-        assertThat(dto).isNotNull();
-        assertThat(dto.getMedia()).isNotNull();
-        assertThat(dto.getMedia().getPagesCount()).isEqualTo(0);
-    }
+    book.setBookFiles(List.of(pdf));
 
-    @Test
-    void shouldHandleNullMetadata() {
-        // Given: A book with null metadata
-        LibraryEntity library = new LibraryEntity();
-        library.setId(1L);
+    // When: Converting to DTO
+    KomgaBookDto dto = mapper.toKomgaBookDto(book);
 
-        BookEntity book = new BookEntity();
-        book.setId(100L);
-        book.setLibrary(library);
-        book.setMetadata(null);  // Null metadata
-        book.setAddedOn(Instant.now());
+    // Then: Should not throw NPE and pageCount should default to 0
+    assertThat(dto).isNotNull();
+    assertThat(dto.getMedia()).isNotNull();
+    assertThat(dto.getMedia().getPagesCount()).isEqualTo(0);
+  }
 
-        BookFileEntity pdf = new BookFileEntity();
-        pdf.setId(100L);
-        pdf.setBook(book);
-        pdf.setFileSubPath("author/title");
-        pdf.setFileName("test-book.pdf");
-        pdf.setBookType(BookFileType.PDF);
-        pdf.setBookFormat(true);
+  @Test
+  void shouldHandleNullMetadata() {
+    // Given: A book with null metadata
+    LibraryEntity library = new LibraryEntity();
+    library.setId(1L);
 
-        book.setBookFiles(List.of(pdf));
+    BookEntity book = new BookEntity();
+    book.setId(100L);
+    book.setLibrary(library);
+    book.setMetadata(null); // Null metadata
+    book.setAddedOn(Instant.now());
 
-        // When: Converting to DTO
-        KomgaBookDto dto = mapper.toKomgaBookDto(book);
+    BookFileEntity pdf = new BookFileEntity();
+    pdf.setId(100L);
+    pdf.setBook(book);
+    pdf.setFileSubPath("author/title");
+    pdf.setFileName("test-book.pdf");
+    pdf.setBookType(BookFileType.PDF);
+    pdf.setBookFormat(true);
 
-        // Then: Should not throw NPE and pageCount should default to 0
-        assertThat(dto).isNotNull();
-        assertThat(dto.getMedia()).isNotNull();
-        assertThat(dto.getMedia().getPagesCount()).isEqualTo(0);
-    }
+    book.setBookFiles(List.of(pdf));
 
-    @Test
-    void shouldHandleValidPageCount() {
-        // Given: A book with metadata that has valid pageCount
-        LibraryEntity library = new LibraryEntity();
-        library.setId(1L);
+    // When: Converting to DTO
+    KomgaBookDto dto = mapper.toKomgaBookDto(book);
 
-        BookMetadataEntity metadata = BookMetadataEntity.builder()
-                .title("Test Book")
-                .seriesName("Test Series")
-                .pageCount(250)
-                .build();
+    // Then: Should not throw NPE and pageCount should default to 0
+    assertThat(dto).isNotNull();
+    assertThat(dto.getMedia()).isNotNull();
+    assertThat(dto.getMedia().getPagesCount()).isEqualTo(0);
+  }
 
-        BookEntity book = new BookEntity();
-        book.setId(100L);
-        book.setLibrary(library);
-        book.setMetadata(metadata);
-        book.setAddedOn(Instant.now());
+  @Test
+  void shouldHandleValidPageCount() {
+    // Given: A book with metadata that has valid pageCount
+    LibraryEntity library = new LibraryEntity();
+    library.setId(1L);
 
-        BookFileEntity pdf = new BookFileEntity();
-        pdf.setId(100L);
-        pdf.setBook(book);
-        pdf.setFileSubPath("author/title");
-        pdf.setFileName("test-book.pdf");
-        pdf.setBookType(BookFileType.PDF);
-        pdf.setBookFormat(true);
+    BookMetadataEntity metadata =
+        BookMetadataEntity.builder()
+            .title("Test Book")
+            .seriesName("Test Series")
+            .pageCount(250)
+            .build();
 
-        book.setBookFiles(List.of(pdf));
+    BookEntity book = new BookEntity();
+    book.setId(100L);
+    book.setLibrary(library);
+    book.setMetadata(metadata);
+    book.setAddedOn(Instant.now());
 
-        // When: Converting to DTO
-        KomgaBookDto dto = mapper.toKomgaBookDto(book);
+    BookFileEntity pdf = new BookFileEntity();
+    pdf.setId(100L);
+    pdf.setBook(book);
+    pdf.setFileSubPath("author/title");
+    pdf.setFileName("test-book.pdf");
+    pdf.setBookType(BookFileType.PDF);
+    pdf.setBookFormat(true);
 
-        // Then: Should use the actual pageCount
-        assertThat(dto).isNotNull();
-        assertThat(dto.getMedia()).isNotNull();
-        assertThat(dto.getMedia().getPagesCount()).isEqualTo(250);
-    }
-    
-    @Test
-    void shouldReturnNullForEmptyFieldsInCleanMode() {
-        // Given: Clean mode is enabled
-        KomgaCleanContext.setCleanMode(true);
-        
-        LibraryEntity library = new LibraryEntity();
-        library.setId(1L);
-        
-        List<BookEntity> books = new ArrayList<>();
-        BookEntity book = new BookEntity();
-        book.setId(100L);
-        book.setLibrary(library);
-        book.setAddedOn(Instant.now());
+    book.setBookFiles(List.of(pdf));
 
-        BookFileEntity pdf = new BookFileEntity();
-        pdf.setId(100L);
-        pdf.setBook(book);
-        pdf.setFileSubPath("author/title");
-        pdf.setFileName("test-book.pdf");
-        pdf.setBookType(BookFileType.PDF);
-        pdf.setBookFormat(true);
+    // When: Converting to DTO
+    KomgaBookDto dto = mapper.toKomgaBookDto(book);
 
-        book.setBookFiles(List.of(pdf));
-        
-        // Book with metadata but empty fields
-        BookMetadataEntity metadata = BookMetadataEntity.builder()
-                .title("Test Book")
-                .seriesName("Test Series")
-                .description(null)
-                .language(null)
-                .publisher(null)
-                .build();
-        book.setMetadata(metadata);
-        books.add(book);
-        
-        // When: Converting to series DTO
-        KomgaSeriesDto seriesDto = mapper.toKomgaSeriesDto("Test Series", 1L, books);
-        
-        // Then: Empty fields should be null (not empty strings) in clean mode
-        assertThat(seriesDto).isNotNull();
-        assertThat(seriesDto.getMetadata()).isNotNull();
-        assertThat(seriesDto.getMetadata().getSummary()).isNull();
-        assertThat(seriesDto.getMetadata().getLanguage()).isNull();
-        assertThat(seriesDto.getMetadata().getPublisher()).isNull();
-    }
-    
-    @Test
-    void shouldReturnDefaultValuesWhenCleanModeDisabled() {
-        // Given: Clean mode is disabled (default)
-        KomgaCleanContext.setCleanMode(false);
-        
-        LibraryEntity library = new LibraryEntity();
-        library.setId(1L);
-        
-        List<BookEntity> books = new ArrayList<>();
-        BookEntity book = new BookEntity();
-        book.setId(100L);
-        book.setLibrary(library);
-        book.setAddedOn(Instant.now());
+    // Then: Should use the actual pageCount
+    assertThat(dto).isNotNull();
+    assertThat(dto.getMedia()).isNotNull();
+    assertThat(dto.getMedia().getPagesCount()).isEqualTo(250);
+  }
 
-        BookFileEntity pdf = new BookFileEntity();
-        pdf.setId(100L);
-        pdf.setBook(book);
-        pdf.setFileSubPath("author/title");
-        pdf.setFileName("test-book.pdf");
-        pdf.setBookType(BookFileType.PDF);
-        pdf.setBookFormat(true);
+  @Test
+  void shouldReturnNullForEmptyFieldsInCleanMode() {
+    // Given: Clean mode is enabled
+    KomgaCleanContext.setCleanMode(true);
 
-        book.setBookFiles(List.of(pdf));
-        
-        // Book with metadata but empty fields
-        BookMetadataEntity metadata = BookMetadataEntity.builder()
-                .title("Test Book")
-                .seriesName("Test Series")
-                .description(null)
-                .language(null)
-                .publisher(null)
-                .build();
-        book.setMetadata(metadata);
-        books.add(book);
-        
-        // When: Converting to series DTO
-        KomgaSeriesDto seriesDto = mapper.toKomgaSeriesDto("Test Series", 1L, books);
-        
-        // Then: Empty fields should have default values (not null)
-        assertThat(seriesDto).isNotNull();
-        assertThat(seriesDto.getMetadata()).isNotNull();
-        assertThat(seriesDto.getMetadata().getSummary()).isEqualTo("");
-        assertThat(seriesDto.getMetadata().getLanguage()).isEqualTo("en");
-        assertThat(seriesDto.getMetadata().getPublisher()).isEqualTo("");
-    }
+    LibraryEntity library = new LibraryEntity();
+    library.setId(1L);
+
+    List<BookEntity> books = new ArrayList<>();
+    BookEntity book = new BookEntity();
+    book.setId(100L);
+    book.setLibrary(library);
+    book.setAddedOn(Instant.now());
+
+    BookFileEntity pdf = new BookFileEntity();
+    pdf.setId(100L);
+    pdf.setBook(book);
+    pdf.setFileSubPath("author/title");
+    pdf.setFileName("test-book.pdf");
+    pdf.setBookType(BookFileType.PDF);
+    pdf.setBookFormat(true);
+
+    book.setBookFiles(List.of(pdf));
+
+    // Book with metadata but empty fields
+    BookMetadataEntity metadata =
+        BookMetadataEntity.builder()
+            .title("Test Book")
+            .seriesName("Test Series")
+            .description(null)
+            .language(null)
+            .publisher(null)
+            .build();
+    book.setMetadata(metadata);
+    books.add(book);
+
+    // When: Converting to series DTO
+    KomgaSeriesDto seriesDto = mapper.toKomgaSeriesDto("Test Series", 1L, books);
+
+    // Then: Empty fields should be null (not empty strings) in clean mode
+    assertThat(seriesDto).isNotNull();
+    assertThat(seriesDto.getMetadata()).isNotNull();
+    assertThat(seriesDto.getMetadata().getSummary()).isNull();
+    assertThat(seriesDto.getMetadata().getLanguage()).isNull();
+    assertThat(seriesDto.getMetadata().getPublisher()).isNull();
+  }
+
+  @Test
+  void shouldReturnDefaultValuesWhenCleanModeDisabled() {
+    // Given: Clean mode is disabled (default)
+    KomgaCleanContext.setCleanMode(false);
+
+    LibraryEntity library = new LibraryEntity();
+    library.setId(1L);
+
+    List<BookEntity> books = new ArrayList<>();
+    BookEntity book = new BookEntity();
+    book.setId(100L);
+    book.setLibrary(library);
+    book.setAddedOn(Instant.now());
+
+    BookFileEntity pdf = new BookFileEntity();
+    pdf.setId(100L);
+    pdf.setBook(book);
+    pdf.setFileSubPath("author/title");
+    pdf.setFileName("test-book.pdf");
+    pdf.setBookType(BookFileType.PDF);
+    pdf.setBookFormat(true);
+
+    book.setBookFiles(List.of(pdf));
+
+    // Book with metadata but empty fields
+    BookMetadataEntity metadata =
+        BookMetadataEntity.builder()
+            .title("Test Book")
+            .seriesName("Test Series")
+            .description(null)
+            .language(null)
+            .publisher(null)
+            .build();
+    book.setMetadata(metadata);
+    books.add(book);
+
+    // When: Converting to series DTO
+    KomgaSeriesDto seriesDto = mapper.toKomgaSeriesDto("Test Series", 1L, books);
+
+    // Then: Empty fields should have default values (not null)
+    assertThat(seriesDto).isNotNull();
+    assertThat(seriesDto.getMetadata()).isNotNull();
+    assertThat(seriesDto.getMetadata().getSummary()).isEqualTo("");
+    assertThat(seriesDto.getMetadata().getLanguage()).isEqualTo("en");
+    assertThat(seriesDto.getMetadata().getPublisher()).isEqualTo("");
+  }
 }

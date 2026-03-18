@@ -1,9 +1,8 @@
 package org.booklore.model.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.LocalDateTime;
+import lombok.*;
 
 @Entity
 @Getter
@@ -13,13 +12,13 @@ import java.time.LocalDateTime;
 @Table(name = "app_migration")
 public class AppMigrationEntity {
 
-    @Id
-    @Column(name = "migration_key", nullable = false, unique = true)
-    private String key;
+  @Id
+  @Column(name = "migration_key", nullable = false, unique = true)
+  private String key;
 
-    @Column(name = "executed_at", nullable = false)
-    private LocalDateTime executedAt;
+  @Column(name = "executed_at", nullable = false)
+  private LocalDateTime executedAt;
 
-    @Column(name = "description")
-    private String description;
+  @Column(name = "description")
+  private String description;
 }

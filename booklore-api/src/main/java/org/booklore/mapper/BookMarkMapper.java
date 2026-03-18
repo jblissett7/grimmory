@@ -8,7 +8,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface BookMarkMapper {
 
-    @Mapping(source = "book.id", target = "bookId")
-    @Mapping(source = "user.id", target = "userId")
-    BookMark toDto(BookMarkEntity entity);
+  @Mapping(source = "book.id", target = "bookId")
+  @Mapping(source = "user.id", target = "userId")
+  BookMark toDto(BookMarkEntity entity);
 }

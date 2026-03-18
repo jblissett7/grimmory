@@ -14,14 +14,14 @@ import tools.jackson.databind.annotation.JsonNaming;
 @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
 public class ChangedReadingState implements Entitlement {
 
-    private WrappedReadingState changedReadingState;
-    
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
-    public static class WrappedReadingState {
-        private KoboReadingState readingState;
-    }
+  private WrappedReadingState changedReadingState;
+
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder
+  @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
+  public static class WrappedReadingState {
+    private KoboReadingState readingState;
+  }
 }

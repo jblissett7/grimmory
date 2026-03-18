@@ -10,13 +10,19 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring")
 public interface BookdropFileMapper {
 
-    @Mapping(target = "originalMetadata", source = "originalMetadata", qualifiedByName = "jsonToBookMetadata")
-    @Mapping(target = "fetchedMetadata", source = "fetchedMetadata", qualifiedByName = "jsonToBookMetadata")
-    BookdropFile toDto(BookdropFileEntity entity);
+  @Mapping(
+      target = "originalMetadata",
+      source = "originalMetadata",
+      qualifiedByName = "jsonToBookMetadata")
+  @Mapping(
+      target = "fetchedMetadata",
+      source = "fetchedMetadata",
+      qualifiedByName = "jsonToBookMetadata")
+  BookdropFile toDto(BookdropFileEntity entity);
 
-    @Named("jsonToBookMetadata")
-    default BookMetadata jsonToBookMetadata(String json) {
-        if (json == null || json.isBlank()) return null;
-        return JsonMetadataMapper.parse(json);
-    }
+  @Named("jsonToBookMetadata")
+  default BookMetadata jsonToBookMetadata(String json) {
+    if (json == null || json.isBlank()) return null;
+    return JsonMetadataMapper.parse(json);
+  }
 }

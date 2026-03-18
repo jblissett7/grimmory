@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class UpdateUserSettingRequest {
-    private String key;
-    private Object value;
+  private String key;
+  private Object value;
 }

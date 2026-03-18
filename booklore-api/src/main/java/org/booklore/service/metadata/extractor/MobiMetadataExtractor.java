@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class MobiMetadataExtractor extends MobiBaseMetadataExtractor {
 
-    @Override
-    protected String getFormatName() {
-        return "MOBI";
-    }
+  @Override
+  protected String getFormatName() {
+    return "MOBI";
+  }
 }

@@ -8,7 +8,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface BookNoteV2Mapper {
 
-    @Mapping(source = "book.id", target = "bookId")
-    @Mapping(source = "user.id", target = "userId")
-    BookNoteV2 toDto(BookNoteV2Entity entity);
+  @Mapping(source = "book.id", target = "bookId")
+  @Mapping(source = "user.id", target = "userId")
+  BookNoteV2 toDto(BookNoteV2Entity entity);
 }

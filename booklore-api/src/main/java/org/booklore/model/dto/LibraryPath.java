@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class LibraryPath {
-    private Long id;
-    private Long libraryId;
-    private String path;
+  private Long id;
+  private Long libraryId;
+  private String path;
 }

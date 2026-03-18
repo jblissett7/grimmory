@@ -12,19 +12,19 @@ import lombok.*;
 @IdClass(BookShelfKey.class)
 public class BookShelfMapping {
 
-    @Id
-    @Column(name = "book_id")
-    private Long bookId;
+  @Id
+  @Column(name = "book_id")
+  private Long bookId;
 
-    @Id
-    @Column(name = "shelf_id")
-    private Long shelfId;
+  @Id
+  @Column(name = "shelf_id")
+  private Long shelfId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id", insertable = false, updatable = false)
-    private BookEntity book;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "book_id", insertable = false, updatable = false)
+  private BookEntity book;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shelf_id", insertable = false, updatable = false)
-    private ShelfEntity shelf;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "shelf_id", insertable = false, updatable = false)
+  private ShelfEntity shelf;
 }

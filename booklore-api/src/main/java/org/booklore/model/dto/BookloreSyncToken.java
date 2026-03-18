@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookloreSyncToken {
-    private String ongoingSyncPointId;
-    private String lastSuccessfulSyncPointId;
-    private String rawKoboSyncToken;
+  private String ongoingSyncPointId;
+  private String lastSuccessfulSyncPointId;
+  private String rawKoboSyncToken;
 }

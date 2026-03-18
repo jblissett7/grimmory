@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AppMagicShelfSummary {
-    private Long id;
-    private String name;
-    private String icon;
-    private String iconType;
-    private boolean publicShelf;
+  private Long id;
+  private String name;
+  private String icon;
+  private String iconType;
+  private boolean publicShelf;
 }

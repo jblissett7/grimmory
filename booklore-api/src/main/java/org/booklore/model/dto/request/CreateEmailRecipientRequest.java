@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateEmailRecipientRequest {
 
-    @NotBlank(message = "Email is required")
-    @Email(message = "Invalid email format")
-    @Size(max = 255, message = "Email length must not exceed 255 characters")
-    private String email;
+  @NotBlank(message = "Email is required")
+  @Email(message = "Invalid email format")
+  @Size(max = 255, message = "Email length must not exceed 255 characters")
+  private String email;
 
-    @NotBlank(message = "Name is required")
-    @Size(max = 100, message = "Name length must not exceed 100 characters")
-    private String name;
+  @NotBlank(message = "Name is required")
+  @Size(max = 100, message = "Name length must not exceed 100 characters")
+  private String name;
 
-    private boolean defaultRecipient;
+  private boolean defaultRecipient;
 }

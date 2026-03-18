@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PdfViewerPreferences {
-    private Long bookId;
-    private String zoom;
-    private String spread;
+  private Long bookId;
+  private String zoom;
+  private String spread;
 }

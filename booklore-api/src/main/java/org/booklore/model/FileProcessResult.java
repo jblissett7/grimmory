@@ -11,6 +11,6 @@ import org.booklore.model.enums.FileProcessStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FileProcessResult {
-    private Book book;
-    private FileProcessStatus status;
+  private Book book;
+  private FileProcessStatus status;
 }

@@ -10,15 +10,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmailProviderV2 {
-    private Long id;
-    private Long userId;
-    private String name;
-    private String host;
-    private Integer port;
-    private String username;
-    private String fromAddress;
-    private Boolean auth;
-    private Boolean startTls;
-    private Boolean defaultProvider;
-    private Boolean shared;
+  private Long id;
+  private Long userId;
+  private String name;
+  private String host;
+  private Integer port;
+  private String username;
+  private String fromAddress;
+  private Boolean auth;
+  private Boolean startTls;
+  private Boolean defaultProvider;
+  private Boolean shared;
 }

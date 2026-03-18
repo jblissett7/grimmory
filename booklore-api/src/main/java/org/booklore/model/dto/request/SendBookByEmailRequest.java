@@ -12,14 +12,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SendBookByEmailRequest {
 
-    @NotNull(message = "Book ID cannot be null")
-    private Long bookId;
+  @NotNull(message = "Book ID cannot be null")
+  private Long bookId;
 
-    @NotNull(message = "Provider ID cannot be null")
-    private Long providerId;
+  @NotNull(message = "Provider ID cannot be null")
+  private Long providerId;
 
-    @NotNull(message = "Recipient ID cannot be null")
-    private Long recipientId;
+  @NotNull(message = "Recipient ID cannot be null")
+  private Long recipientId;
 
-    private Long bookFileId;  // Optional: if null, uses primary file
+  private Long bookFileId; // Optional: if null, uses primary file
 }

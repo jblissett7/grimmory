@@ -12,11 +12,11 @@ import org.booklore.model.enums.MetadataReplaceMode;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MetadataUpdateContext {
-    private BookEntity bookEntity;
-    private MetadataUpdateWrapper metadataUpdateWrapper;
-    private boolean updateThumbnail;
-    private boolean mergeCategories;
-    private boolean mergeMoods;
-    private boolean mergeTags;
-    private MetadataReplaceMode replaceMode;
+  private BookEntity bookEntity;
+  private MetadataUpdateWrapper metadataUpdateWrapper;
+  private boolean updateThumbnail;
+  private boolean mergeCategories;
+  private boolean mergeMoods;
+  private boolean mergeTags;
+  private MetadataReplaceMode replaceMode;
 }

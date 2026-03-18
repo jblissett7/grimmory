@@ -1,21 +1,20 @@
 package org.booklore.model.dto;
 
+import java.time.LocalDateTime;
 import org.booklore.model.enums.BookFileType;
 
-import java.time.LocalDateTime;
-
 public interface ReadingSessionTimelineDto {
-    Long getBookId();
+  Long getBookId();
 
-    String getBookTitle();
+  String getBookTitle();
 
-    BookFileType getBookFileType();
+  BookFileType getBookFileType();
 
-    LocalDateTime getStartDate();
+  LocalDateTime getStartDate();
 
-    LocalDateTime getEndDate();
+  LocalDateTime getEndDate();
 
-    Long getTotalSessions();
+  Long getTotalSessions();
 
-    Long getTotalDurationSeconds();
+  Long getTotalDurationSeconds();
 }

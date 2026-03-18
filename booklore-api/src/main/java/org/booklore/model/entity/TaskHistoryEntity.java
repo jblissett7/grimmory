@@ -1,13 +1,12 @@
 package org.booklore.model.entity;
 
-import org.booklore.convertor.JpaJsonConverter;
-import org.booklore.task.TaskStatus;
-import org.booklore.model.enums.TaskType;
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.LocalDateTime;
 import java.util.Map;
+import lombok.*;
+import org.booklore.convertor.JpaJsonConverter;
+import org.booklore.model.enums.TaskType;
+import org.booklore.task.TaskStatus;
 
 @Entity
 @Table(name = "tasks")
@@ -18,40 +17,39 @@ import java.util.Map;
 @AllArgsConstructor
 public class TaskHistoryEntity {
 
-    @Id
-    @Column(length = 36)
-    private String id;
+  @Id
+  @Column(length = 36)
+  private String id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private TaskType type;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private TaskType type;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private TaskStatus status;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private TaskStatus status;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+  @Column(name = "user_id", nullable = false)
+  private Long userId;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+  @Column(name = "created_at", nullable = false)
+  private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
 
-    @Column(name = "completed_at")
-    private LocalDateTime completedAt;
+  @Column(name = "completed_at")
+  private LocalDateTime completedAt;
 
-    @Column(name = "progress_percentage")
-    private Integer progressPercentage;
+  @Column(name = "progress_percentage")
+  private Integer progressPercentage;
 
-    @Column(length = 512)
-    private String message;
+  @Column(length = 512)
+  private String message;
 
-    @Lob
-    private String errorDetails;
+  @Lob private String errorDetails;
 
-    @Convert(converter = JpaJsonConverter.class)
-    @Column(name = "task_options", columnDefinition = "TEXT")
-    private Map<String, Object> taskOptions;
+  @Convert(converter = JpaJsonConverter.class)
+  @Column(name = "task_options", columnDefinition = "TEXT")
+  private Map<String, Object> taskOptions;
 }

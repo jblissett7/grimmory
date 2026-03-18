@@ -16,13 +16,51 @@ import tools.jackson.databind.annotation.JsonNaming;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class KoboReadingState {
-    private String entitlementId;
-    private String created;
+  private String entitlementId;
+  private String created;
+  private String lastModified;
+  private StatusInfo statusInfo;
+  private Statistics statistics;
+  private CurrentBookmark currentBookmark;
+  private String priorityTimestamp;
+
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
+  @Builder
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  public static class StatusInfo {
     private String lastModified;
-    private StatusInfo statusInfo;
-    private Statistics statistics;
-    private CurrentBookmark currentBookmark;
-    private String priorityTimestamp;
+    private KoboReadStatus status;
+    private Integer timesStartedReading;
+    private String lastTimeStartedReading;
+    private String lastTimeFinished;
+  }
+
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
+  @Builder
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  public static class Statistics {
+    private String lastModified;
+    private Integer spentReadingMinutes;
+    private Integer remainingTimeMinutes;
+  }
+
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
+  @Builder
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  public static class CurrentBookmark {
+    private String lastModified;
+    private Integer progressPercent;
+    private Integer contentSourceProgressPercent;
+    private Location location;
 
     @Data
     @NoArgsConstructor
@@ -30,48 +68,10 @@ public class KoboReadingState {
     @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
     @Builder
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class StatusInfo {
-        private String lastModified;
-        private KoboReadStatus status;
-        private Integer timesStartedReading;
-        private String lastTimeStartedReading;
-        private String lastTimeFinished;
+    public static class Location {
+      private String value;
+      private String type;
+      private String source;
     }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
-    @Builder
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class Statistics {
-        private String lastModified;
-        private Integer spentReadingMinutes;
-        private Integer remainingTimeMinutes;
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
-    @Builder
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class CurrentBookmark {
-        private String lastModified;
-        private Integer progressPercent;
-        private Integer contentSourceProgressPercent;
-        private Location location;
-
-        @Data
-        @NoArgsConstructor
-        @AllArgsConstructor
-        @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
-        @Builder
-        @JsonInclude(JsonInclude.Include.NON_NULL)
-        public static class Location {
-            private String value;
-            private String type;
-            private String source;
-        }
-    }
+  }
 }

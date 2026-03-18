@@ -11,10 +11,10 @@ import org.booklore.model.enums.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CbxViewerPreferences {
-    private Long bookId;
-    private CbxPageSpread pageSpread;
-    private CbxPageViewMode pageViewMode;
-    private CbxPageFitMode fitMode;
-    private CbxPageScrollMode scrollMode;
-    private CbxBackgroundColor backgroundColor;
+  private Long bookId;
+  private CbxPageSpread pageSpread;
+  private CbxPageViewMode pageViewMode;
+  private CbxPageFitMode fitMode;
+  private CbxPageScrollMode scrollMode;
+  private CbxBackgroundColor backgroundColor;
 }

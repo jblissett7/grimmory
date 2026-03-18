@@ -8,7 +8,7 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface EpubViewerPreferencesMapper {
 
-    EpubViewerPreferences toModel(EpubViewerPreferencesEntity entity);
+  EpubViewerPreferences toModel(EpubViewerPreferencesEntity entity);
 
-    EpubViewerPreferencesEntity toEntity(EpubViewerPreferences entity);
+  EpubViewerPreferencesEntity toEntity(EpubViewerPreferences entity);
 }

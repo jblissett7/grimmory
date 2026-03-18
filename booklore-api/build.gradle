@@ -4,6 +4,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.7'
     id 'org.hibernate.orm' version '7.2.6.Final'
     id 'com.github.ben-manes.versions' version '0.53.0'
+    id 'com.diffplug.spotless' version '8.3.0'
     id 'jacoco'
 }
 
@@ -124,6 +125,16 @@ dependencies {
 hibernate {
     enhancement {
         enableAssociationManagement = true
+    }
+}
+
+spotless {
+    java {
+        target 'src/*/java/**/*.java'
+        googleJavaFormat('1.35.0')
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
     }
 }
 

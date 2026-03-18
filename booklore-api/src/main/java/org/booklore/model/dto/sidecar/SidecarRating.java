@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SidecarRating {
-    private Double average;
-    private Integer count;
+  private Double average;
+  private Integer count;
 }

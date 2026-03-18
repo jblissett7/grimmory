@@ -14,5 +14,5 @@ import tools.jackson.databind.annotation.JsonNaming;
 @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class KoboResources {
-    private JsonNode resources;
+  private JsonNode resources;
 }

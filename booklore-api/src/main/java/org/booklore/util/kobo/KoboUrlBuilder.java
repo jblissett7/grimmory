@@ -14,61 +14,82 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class KoboUrlBuilder {
 
-    public UriComponentsBuilder baseBuilder() {
-        UriComponentsBuilder builder = ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .replacePath("")
-                .replaceQuery(null);
+  public UriComponentsBuilder baseBuilder() {
+    UriComponentsBuilder builder =
+        ServletUriComponentsBuilder.fromCurrentContextPath().replacePath("").replaceQuery(null);
 
-        UriComponents built = builder.build();
-        if (built.getPort() == -1 && !hasForwardedHeaders()) {
-            int localPort = RequestUtils.getCurrentRequest().getLocalPort();
-            if (!isDefaultPort(built.getScheme(), localPort)) {
-                builder.port(localPort);
-            }
-        }
-
-        log.debug("Final base URL: {}", builder.build().toUriString());
-        return builder;
+    UriComponents built = builder.build();
+    if (built.getPort() == -1 && !hasForwardedHeaders()) {
+      int localPort = RequestUtils.getCurrentRequest().getLocalPort();
+      if (!isDefaultPort(built.getScheme(), localPort)) {
+        builder.port(localPort);
+      }
     }
 
-    private boolean hasForwardedHeaders() {
-        HttpServletRequest request = RequestUtils.getCurrentRequest();
-        return request.getHeader("X-Forwarded-Host") != null
-                || request.getHeader("X-Forwarded-Port") != null
-                || request.getHeader("X-Forwarded-Proto") != null
-                || request.getHeader("Forwarded") != null;
-    }
+    log.debug("Final base URL: {}", builder.build().toUriString());
+    return builder;
+  }
 
-    private boolean isDefaultPort(String scheme, int port) {
-        return ("http".equals(scheme) && port == 80) || ("https".equals(scheme) && port == 443);
-    }
+  private boolean hasForwardedHeaders() {
+    HttpServletRequest request = RequestUtils.getCurrentRequest();
+    return request.getHeader("X-Forwarded-Host") != null
+        || request.getHeader("X-Forwarded-Port") != null
+        || request.getHeader("X-Forwarded-Proto") != null
+        || request.getHeader("Forwarded") != null;
+  }
 
-    public String downloadUrl(String token, Long bookId) {
-        return baseBuilder()
-                .pathSegment("api", "kobo", token, "v1", "books", "{bookId}", "download")
-                .buildAndExpand(bookId)
-                .toUriString();
-    }
+  private boolean isDefaultPort(String scheme, int port) {
+    return ("http".equals(scheme) && port == 80) || ("https".equals(scheme) && port == 443);
+  }
 
-    public String imageUrlTemplate(String token) {
-        return baseBuilder()
-                .pathSegment("api", "kobo", token, "v1", "books", "{ImageId}", "thumbnail", "{Width}", "{Height}", "false", "image.jpg")
-                .build()
-                .toUriString();
-    }
+  public String downloadUrl(String token, Long bookId) {
+    return baseBuilder()
+        .pathSegment("api", "kobo", token, "v1", "books", "{bookId}", "download")
+        .buildAndExpand(bookId)
+        .toUriString();
+  }
 
-    public String imageUrlQualityTemplate(String token) {
-        return baseBuilder()
-                .pathSegment("api", "kobo", token, "v1", "books", "{ImageId}", "thumbnail", "{Width}", "{Height}", "{Quality}", "{IsGreyscale}", "image.jpg")
-                .build()
-                .toUriString();
-    }
+  public String imageUrlTemplate(String token) {
+    return baseBuilder()
+        .pathSegment(
+            "api",
+            "kobo",
+            token,
+            "v1",
+            "books",
+            "{ImageId}",
+            "thumbnail",
+            "{Width}",
+            "{Height}",
+            "false",
+            "image.jpg")
+        .build()
+        .toUriString();
+  }
 
-    public String librarySyncUrl(String token) {
-        return baseBuilder()
-                .pathSegment("api", "kobo", token, "v1", "library", "sync")
-                .build()
-                .toUriString();
-    }
+  public String imageUrlQualityTemplate(String token) {
+    return baseBuilder()
+        .pathSegment(
+            "api",
+            "kobo",
+            token,
+            "v1",
+            "books",
+            "{ImageId}",
+            "thumbnail",
+            "{Width}",
+            "{Height}",
+            "{Quality}",
+            "{IsGreyscale}",
+            "image.jpg")
+        .build()
+        .toUriString();
+  }
+
+  public String librarySyncUrl(String token) {
+    return baseBuilder()
+        .pathSegment("api", "kobo", token, "v1", "library", "sync")
+        .build()
+        .toUriString();
+  }
 }

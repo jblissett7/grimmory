@@ -7,6 +7,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookRecommendation {
-    private Book book;
-    private double similarityScore;
+  private Book book;
+  private double similarityScore;
 }

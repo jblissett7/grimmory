@@ -11,7 +11,6 @@ import org.booklore.model.dto.BookMetadata;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MetadataUpdateWrapper {
-    private BookMetadata metadata;
-    @Builder.Default
-    private MetadataClearFlags clearFlags = new MetadataClearFlags();
+  private BookMetadata metadata;
+  @Builder.Default private MetadataClearFlags clearFlags = new MetadataClearFlags();
 }

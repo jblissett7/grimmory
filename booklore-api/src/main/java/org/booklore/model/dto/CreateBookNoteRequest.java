@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateBookNoteRequest {
-    private Long id;
+  private Long id;
 
-    @NotNull(message = "Book ID is required")
-    private Long bookId;
+  @NotNull(message = "Book ID is required")
+  private Long bookId;
 
-    private String title;
+  private String title;
 
-    @NotBlank(message = "Content is required")
-    private String content;
+  @NotBlank(message = "Content is required")
+  private String content;
 }

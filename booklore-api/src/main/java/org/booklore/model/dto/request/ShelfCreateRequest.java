@@ -1,7 +1,6 @@
 package org.booklore.model.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,14 +13,14 @@ import org.booklore.model.enums.IconType;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShelfCreateRequest {
-    @Null(message = "Id should be null for creation.")
-    private Long id;
+  @Null(message = "Id should be null for creation.")
+  private Long id;
 
-    @NotBlank(message = "Shelf name must not be empty.")
-    private String name;
+  @NotBlank(message = "Shelf name must not be empty.")
+  private String name;
 
-    private String icon;
-    private IconType iconType;
+  private String icon;
+  private IconType iconType;
 
-    private boolean publicShelf;
+  private boolean publicShelf;
 }

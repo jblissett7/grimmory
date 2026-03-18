@@ -13,10 +13,9 @@ import tools.jackson.databind.annotation.JsonNaming;
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
 public class KoboAuthentication {
-    private String accessToken;
-    private String refreshToken;
-    @Builder.Default
-    private String tokenType = "Bearer";
-    private String trackingId;
-    private String userKey;
+  private String accessToken;
+  private String refreshToken;
+  @Builder.Default private String tokenType = "Bearer";
+  private String trackingId;
+  private String userKey;
 }

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookdropBulkEditResult {
-    private int totalFiles;
-    private int successfullyUpdated;
-    private int failed;
+  private int totalFiles;
+  private int successfullyUpdated;
+  private int failed;
 }

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class OpdsUserCreateRequest {
-    private String username;
-    private String password;
+  private String username;
+  private String password;
 }

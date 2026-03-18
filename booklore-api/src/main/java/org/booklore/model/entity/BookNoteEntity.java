@@ -1,11 +1,10 @@
 package org.booklore.model.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -16,35 +15,35 @@ import java.time.LocalDateTime;
 @Table(name = "book_notes")
 public class BookNoteEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private BookLoreUserEntity user;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private BookLoreUserEntity user;
 
-    @Column(name = "user_id", insertable = false, updatable = false)
-    private Long userId;
+  @Column(name = "user_id", insertable = false, updatable = false)
+  private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id", nullable = false)
-    private BookEntity book;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "book_id", nullable = false)
+  private BookEntity book;
 
-    @Column(name = "book_id", insertable = false, updatable = false)
-    private Long bookId;
+  @Column(name = "book_id", insertable = false, updatable = false)
+  private Long bookId;
 
-    @Column(name = "title")
-    private String title;
+  @Column(name = "title")
+  private String title;
 
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
-    private String content;
+  @Column(name = "content", nullable = false, columnDefinition = "TEXT")
+  private String content;
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+  @CreationTimestamp
+  @Column(name = "created_at", nullable = false, updatable = false)
+  private LocalDateTime createdAt;
 
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+  @UpdateTimestamp
+  @Column(name = "updated_at", nullable = false)
+  private LocalDateTime updatedAt;
 }

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookdropFileNotification {
-    private int pendingCount;
-    private int totalCount;
-    private String lastUpdatedAt;
+  private int pendingCount;
+  private int totalCount;
+  private String lastUpdatedAt;
 }

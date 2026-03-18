@@ -1,5 +1,8 @@
 package org.booklore.repository;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import org.booklore.model.dto.BookCompletionHeatmapDto;
 import org.booklore.model.dto.CompletionTimelineDto;
 import org.booklore.model.dto.ProgressPercentDto;
@@ -12,19 +15,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
 @Repository
 public interface UserBookProgressRepository extends JpaRepository<UserBookProgressEntity, Long> {
 
-    Optional<UserBookProgressEntity> findByUserIdAndBookId(Long userId, Long bookId);
+  Optional<UserBookProgressEntity> findByUserIdAndBookId(Long userId, Long bookId);
 
-    List<UserBookProgressEntity> findByUserIdAndBookIdIn(Long userId, Set<Long> bookIds);
+  List<UserBookProgressEntity> findByUserIdAndBookIdIn(Long userId, Set<Long> bookIds);
 
-    @Query("""
+  @Query(
+      """
         SELECT ubp FROM UserBookProgressEntity ubp
         WHERE ubp.user.id = :userId
           AND ubp.book.id IN (
@@ -47,12 +46,11 @@ public interface UserBookProgressRepository extends JpaRepository<UserBookProgre
                   AND (ubp.koboProgressSentTime IS NULL OR ubp.lastReadTime > ubp.koboProgressSentTime))
           )
     """)
-    List<UserBookProgressEntity> findAllBooksNeedingKoboSync(
-            @Param("userId") Long userId,
-            @Param("snapshotId") String snapshotId
-    );
+  List<UserBookProgressEntity> findAllBooksNeedingKoboSync(
+      @Param("userId") Long userId, @Param("snapshotId") String snapshotId);
 
-    @Query("""
+  @Query(
+      """
             SELECT
                 YEAR(COALESCE(ubp.dateFinished, ubp.readStatusModifiedTime, ubp.lastReadTime)) as year,
                 MONTH(COALESCE(ubp.dateFinished, ubp.readStatusModifiedTime, ubp.lastReadTime)) as month,
@@ -69,10 +67,12 @@ public interface UserBookProgressRepository extends JpaRepository<UserBookProgre
                      ubp.readStatus
             ORDER BY year DESC, month DESC
             """)
-    List<CompletionTimelineDto> findCompletionTimelineByUser(@Param("userId") Long userId, @Param("year") int year);
+  List<CompletionTimelineDto> findCompletionTimelineByUser(
+      @Param("userId") Long userId, @Param("year") int year);
 
-    @Modifying
-    @Query("""
+  @Modifying
+  @Query(
+      """
         UPDATE UserBookProgressEntity ubp
         SET ubp.readStatus = :readStatus,
             ubp.readStatusModifiedTime = :modifiedTime,
@@ -80,23 +80,25 @@ public interface UserBookProgressRepository extends JpaRepository<UserBookProgre
         WHERE ubp.user.id = :userId
           AND ubp.book.id IN :bookIds
     """)
-    int bulkUpdateReadStatus(
-            @Param("userId") Long userId,
-            @Param("bookIds") List<Long> bookIds,
-            @Param("readStatus") org.booklore.model.enums.ReadStatus readStatus,
-            @Param("modifiedTime") java.time.Instant modifiedTime,
-            @Param("dateFinished") java.time.Instant dateFinished
-    );
+  int bulkUpdateReadStatus(
+      @Param("userId") Long userId,
+      @Param("bookIds") List<Long> bookIds,
+      @Param("readStatus") org.booklore.model.enums.ReadStatus readStatus,
+      @Param("modifiedTime") java.time.Instant modifiedTime,
+      @Param("dateFinished") java.time.Instant dateFinished);
 
-    @Query("""
+  @Query(
+      """
         SELECT ubp.book.id FROM UserBookProgressEntity ubp
         WHERE ubp.user.id = :userId
           AND ubp.book.id IN :bookIds
     """)
-    Set<Long> findExistingProgressBookIds(@Param("userId") Long userId, @Param("bookIds") Set<Long> bookIds);
+  Set<Long> findExistingProgressBookIds(
+      @Param("userId") Long userId, @Param("bookIds") Set<Long> bookIds);
 
-    @Modifying
-    @Query("""
+  @Modifying
+  @Query(
+      """
         UPDATE UserBookProgressEntity ubp
         SET ubp.readStatus = NULL,
             ubp.readStatusModifiedTime = :modifiedTime,
@@ -111,10 +113,14 @@ public interface UserBookProgressRepository extends JpaRepository<UserBookProgre
         WHERE ubp.user.id = :userId
           AND ubp.book.id IN :bookIds
     """)
-    int bulkResetBookloreProgress(@Param("userId") Long userId, @Param("bookIds") List<Long> bookIds, @Param("modifiedTime") java.time.Instant modifiedTime);
+  int bulkResetBookloreProgress(
+      @Param("userId") Long userId,
+      @Param("bookIds") List<Long> bookIds,
+      @Param("modifiedTime") java.time.Instant modifiedTime);
 
-    @Modifying
-    @Query("""
+  @Modifying
+  @Query(
+      """
         UPDATE UserBookProgressEntity ubp
         SET ubp.koreaderProgress = NULL,
             ubp.koreaderProgressPercent = NULL,
@@ -124,10 +130,11 @@ public interface UserBookProgressRepository extends JpaRepository<UserBookProgre
         WHERE ubp.user.id = :userId
           AND ubp.book.id IN :bookIds
     """)
-    int bulkResetKoreaderProgress(@Param("userId") Long userId, @Param("bookIds") List<Long> bookIds);
+  int bulkResetKoreaderProgress(@Param("userId") Long userId, @Param("bookIds") List<Long> bookIds);
 
-    @Modifying
-    @Query("""
+  @Modifying
+  @Query(
+      """
         UPDATE UserBookProgressEntity ubp
         SET ubp.koboProgressPercent = NULL,
             ubp.koboLocation = NULL,
@@ -137,18 +144,23 @@ public interface UserBookProgressRepository extends JpaRepository<UserBookProgre
         WHERE ubp.user.id = :userId
           AND ubp.book.id IN :bookIds
     """)
-    int bulkResetKoboProgress(@Param("userId") Long userId, @Param("bookIds") List<Long> bookIds);
+  int bulkResetKoboProgress(@Param("userId") Long userId, @Param("bookIds") List<Long> bookIds);
 
-    @Modifying
-    @Query("""
+  @Modifying
+  @Query(
+      """
         UPDATE UserBookProgressEntity ubp
         SET ubp.personalRating = :rating
         WHERE ubp.user.id = :userId
           AND ubp.book.id IN :bookIds
     """)
-    int bulkUpdatePersonalRating(@Param("userId") Long userId, @Param("bookIds") List<Long> bookIds, @Param("rating") Integer rating);
+  int bulkUpdatePersonalRating(
+      @Param("userId") Long userId,
+      @Param("bookIds") List<Long> bookIds,
+      @Param("rating") Integer rating);
 
-    @Query("""
+  @Query(
+      """
             SELECT
                 YEAR(ubp.dateFinished) as year,
                 MONTH(ubp.dateFinished) as month,
@@ -161,12 +173,13 @@ public interface UserBookProgressRepository extends JpaRepository<UserBookProgre
             GROUP BY YEAR(ubp.dateFinished), MONTH(ubp.dateFinished)
             ORDER BY year ASC, month ASC
             """)
-    List<BookCompletionHeatmapDto> findBookCompletionHeatmap(
-            @Param("userId") Long userId,
-            @Param("startYear") int startYear,
-            @Param("endYear") int endYear);
+  List<BookCompletionHeatmapDto> findBookCompletionHeatmap(
+      @Param("userId") Long userId,
+      @Param("startYear") int startYear,
+      @Param("endYear") int endYear);
 
-    @Query("""
+  @Query(
+      """
             SELECT ubp.personalRating as rating, COUNT(ubp) as count
             FROM UserBookProgressEntity ubp
             WHERE ubp.user.id = :userId
@@ -174,9 +187,10 @@ public interface UserBookProgressRepository extends JpaRepository<UserBookProgre
             GROUP BY ubp.personalRating
             ORDER BY ubp.personalRating
             """)
-    List<RatingDistributionDto> findRatingDistributionByUser(@Param("userId") Long userId);
+  List<RatingDistributionDto> findRatingDistributionByUser(@Param("userId") Long userId);
 
-    @Query("""
+  @Query(
+      """
             SELECT ubp.readStatus as status, COUNT(ubp) as count
             FROM UserBookProgressEntity ubp
             WHERE ubp.user.id = :userId
@@ -184,9 +198,10 @@ public interface UserBookProgressRepository extends JpaRepository<UserBookProgre
             AND ubp.readStatus <> org.booklore.model.enums.ReadStatus.UNSET
             GROUP BY ubp.readStatus
             """)
-    List<StatusDistributionDto> findStatusDistributionByUser(@Param("userId") Long userId);
+  List<StatusDistributionDto> findStatusDistributionByUser(@Param("userId") Long userId);
 
-    @Query("""
+  @Query(
+      """
             SELECT ubp.koreaderProgressPercent as koreaderProgressPercent,
                    ubp.koboProgressPercent as koboProgressPercent,
                    ubp.epubProgressPercent as epubProgressPercent,
@@ -195,5 +210,5 @@ public interface UserBookProgressRepository extends JpaRepository<UserBookProgre
             FROM UserBookProgressEntity ubp
             WHERE ubp.user.id = :userId
             """)
-    List<ProgressPercentDto> findAllProgressPercentsByUser(@Param("userId") Long userId);
+  List<ProgressPercentDto> findAllProgressPercentsByUser(@Param("userId") Long userId);
 }

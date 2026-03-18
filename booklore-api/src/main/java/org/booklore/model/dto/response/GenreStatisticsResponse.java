@@ -10,10 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GenreStatisticsResponse {
-    private String genre;
-    private Long bookCount;
-    private Long totalSessions;
-    private Long totalDurationSeconds;
-    private Double averageSessionsPerBook;
+  private String genre;
+  private Long bookCount;
+  private Long totalSessions;
+  private Long totalDurationSeconds;
+  private Double averageSessionsPerBook;
 }
-

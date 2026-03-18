@@ -8,6 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class BookRecommendationLite {
-    private long b; // bookId
-    private double s; // similarityScore
+  private long b; // bookId
+  private double s; // similarityScore
 }

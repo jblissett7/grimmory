@@ -15,5 +15,5 @@ import tools.jackson.databind.annotation.JsonNaming;
 @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class NewEntitlement implements Entitlement {
-    private BookEntitlementContainer newEntitlement;
+  private BookEntitlementContainer newEntitlement;
 }

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FileMoveResult {
-    private boolean moved;
-    private String newFileName;
-    private String newFileSubPath;
+  private boolean moved;
+  private String newFileName;
+  private String newFileSubPath;
 }

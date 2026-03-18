@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AudiobookTrack {
-    private Integer index;
-    private String fileName;
-    private String title;
-    private Long durationMs;
-    private Long fileSizeBytes;
-    private Long cumulativeStartMs;
+  private Integer index;
+  private String fileName;
+  private String title;
+  private Long durationMs;
+  private Long fileSizeBytes;
+  private Long cumulativeStartMs;
 }

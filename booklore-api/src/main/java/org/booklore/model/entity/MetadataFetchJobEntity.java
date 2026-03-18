@@ -1,12 +1,11 @@
 package org.booklore.model.entity;
 
-import org.booklore.model.enums.MetadataFetchTaskStatus;
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.*;
+import org.booklore.model.enums.MetadataFetchTaskStatus;
 
 @Entity
 @Table(name = "metadata_fetch_jobs")
@@ -17,33 +16,37 @@ import java.util.List;
 @AllArgsConstructor
 public class MetadataFetchJobEntity {
 
-    @Id
-    @Column(name = "task_id", length = 100)
-    private String taskId;
+  @Id
+  @Column(name = "task_id", length = 100)
+  private String taskId;
 
-    @Column(name = "user_id")
-    private Long userId;
+  @Column(name = "user_id")
+  private Long userId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private MetadataFetchTaskStatus status;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false, length = 20)
+  private MetadataFetchTaskStatus status;
 
-    @Column(name = "status_message", columnDefinition = "TEXT")
-    private String statusMessage;
+  @Column(name = "status_message", columnDefinition = "TEXT")
+  private String statusMessage;
 
-    @Column(name = "started_at", nullable = false)
-    private Instant startedAt;
+  @Column(name = "started_at", nullable = false)
+  private Instant startedAt;
 
-    @Column(name = "completed_at")
-    private Instant completedAt;
+  @Column(name = "completed_at")
+  private Instant completedAt;
 
-    @Column(name = "total_books_count")
-    private Integer totalBooksCount;
+  @Column(name = "total_books_count")
+  private Integer totalBooksCount;
 
-    @Column(name = "completed_books")
-    private Integer completedBooks;
+  @Column(name = "completed_books")
+  private Integer completedBooks;
 
-    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<MetadataFetchProposalEntity> proposals = new ArrayList<>();
+  @OneToMany(
+      mappedBy = "job",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.LAZY)
+  @Builder.Default
+  private List<MetadataFetchProposalEntity> proposals = new ArrayList<>();
 }

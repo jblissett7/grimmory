@@ -12,19 +12,19 @@ import lombok.*;
 @IdClass(BookMetadataCategoryKey.class)
 public class BookMetadataCategoryMapping {
 
-    @Id
-    @Column(name = "book_id")
-    private Long bookId;
+  @Id
+  @Column(name = "book_id")
+  private Long bookId;
 
-    @Id
-    @Column(name = "category_id")
-    private Long categoryId;
+  @Id
+  @Column(name = "category_id")
+  private Long categoryId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id", insertable = false, updatable = false)
-    private BookMetadataEntity book;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "book_id", insertable = false, updatable = false)
+  private BookMetadataEntity book;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", insertable = false, updatable = false)
-    private CategoryEntity category;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "category_id", insertable = false, updatable = false)
+  private CategoryEntity category;
 }

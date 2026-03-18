@@ -1,5 +1,7 @@
 package org.booklore.service.metadata.sidecar;
 
+import static org.mockito.Mockito.*;
+
 import org.booklore.config.AppProperties;
 import org.booklore.model.entity.BookEntity;
 import org.booklore.service.appsettings.AppSettingService;
@@ -11,44 +13,37 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 class SidecarMetadataWriterTest {
 
-    @Mock
-    private AppProperties appProperties;
+  @Mock private AppProperties appProperties;
 
-    @Mock
-    private SidecarMetadataMapper mapper;
+  @Mock private SidecarMetadataMapper mapper;
 
-    @Mock
-    private FileService fileService;
+  @Mock private FileService fileService;
 
-    @Mock
-    private AppSettingService appSettingService;
+  @Mock private AppSettingService appSettingService;
 
-    @InjectMocks
-    private SidecarMetadataWriter sidecarMetadataWriter;
+  @InjectMocks private SidecarMetadataWriter sidecarMetadataWriter;
 
-    @BeforeEach
-    void setUp() {
-        lenient().when(appProperties.isLocalStorage()).thenReturn(true);
-    }
+  @BeforeEach
+  void setUp() {
+    lenient().when(appProperties.isLocalStorage()).thenReturn(true);
+  }
 
-    @Test
-    void writeSidecarMetadata_networkStorage_skipsWrite() {
-        when(appProperties.isLocalStorage()).thenReturn(false);
+  @Test
+  void writeSidecarMetadata_networkStorage_skipsWrite() {
+    when(appProperties.isLocalStorage()).thenReturn(false);
 
-        sidecarMetadataWriter.writeSidecarMetadata(new BookEntity());
+    sidecarMetadataWriter.writeSidecarMetadata(new BookEntity());
 
-        verify(appSettingService, never()).getAppSettings();
-    }
+    verify(appSettingService, never()).getAppSettings();
+  }
 
-    @Test
-    void writeSidecarMetadata_localStorage_proceedsNormally() {
-        sidecarMetadataWriter.writeSidecarMetadata(null);
+  @Test
+  void writeSidecarMetadata_localStorage_proceedsNormally() {
+    sidecarMetadataWriter.writeSidecarMetadata(null);
 
-        verify(appProperties).isLocalStorage();
-    }
+    verify(appProperties).isLocalStorage();
+  }
 }

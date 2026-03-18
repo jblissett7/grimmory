@@ -1,12 +1,11 @@
 package org.booklore.service.metadata.extractor;
 
-import org.booklore.model.dto.BookMetadata;
-
 import java.io.File;
+import org.booklore.model.dto.BookMetadata;
 
 public interface FileMetadataExtractor {
 
-    BookMetadata extractMetadata(File file);
+  BookMetadata extractMetadata(File file);
 
-    byte[] extractCover(File file);
+  byte[] extractCover(File file);
 }

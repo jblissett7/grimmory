@@ -11,16 +11,16 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class KoboDeletedBookProgressEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "snapshot_id", nullable = false)
-    private String snapshotId;
+  @Column(name = "snapshot_id", nullable = false)
+  private String snapshotId;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+  @Column(name = "user_id", nullable = false)
+  private Long userId;
 
-    @Column(name = "book_id_synced", nullable = false)
-    private Long bookIdSynced;
+  @Column(name = "book_id_synced", nullable = false)
+  private Long bookIdSynced;
 }

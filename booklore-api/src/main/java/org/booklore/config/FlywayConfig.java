@@ -8,15 +8,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FlywayConfig {
 
-    @Bean
-    FlywayMigrationStrategy flywayMigrationStrategy() {
-        return flyway -> {
-            try {
-                flyway.migrate();
-            } catch (FlywayValidateException e) {
-                flyway.repair();
-                flyway.migrate();
-            }
-        };
-    }
+  @Bean
+  FlywayMigrationStrategy flywayMigrationStrategy() {
+    return flyway -> {
+      try {
+        flyway.migrate();
+      } catch (FlywayValidateException e) {
+        flyway.repair();
+        flyway.migrate();
+      }
+    };
+  }
 }

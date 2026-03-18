@@ -7,13 +7,13 @@ import org.booklore.model.enums.TaskType;
 
 public interface Task {
 
-    TaskCreateResponse execute(TaskCreateRequest request);
+  TaskCreateResponse execute(TaskCreateRequest request);
 
-    TaskType getTaskType();
+  TaskType getTaskType();
 
-    default String getMetadata() {
-        return null;
-    }
+  default String getMetadata() {
+    return null;
+  }
 
-    void validatePermissions(BookLoreUser user, TaskCreateRequest request);
+  void validatePermissions(BookLoreUser user, TaskCreateRequest request);
 }

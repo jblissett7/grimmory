@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AppAuthorDetail {
-    private Long id;
-    private String name;
-    private String description;
-    private String asin;
-    private int bookCount;
-    private boolean hasPhoto;
+  private Long id;
+  private String name;
+  private String description;
+  private String asin;
+  private int bookCount;
+  private boolean hasPhoto;
 }

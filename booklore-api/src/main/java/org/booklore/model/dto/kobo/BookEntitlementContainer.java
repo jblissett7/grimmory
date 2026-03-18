@@ -15,7 +15,7 @@ import tools.jackson.databind.annotation.JsonNaming;
 @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BookEntitlementContainer {
-    private BookEntitlement bookEntitlement;
-    private KoboBookMetadata bookMetadata;
-    private KoboReadingState readingState;
+  private BookEntitlement bookEntitlement;
+  private KoboBookMetadata bookMetadata;
+  private KoboReadingState readingState;
 }

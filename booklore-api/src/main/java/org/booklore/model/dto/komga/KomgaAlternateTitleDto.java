@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class KomgaAlternateTitleDto {
-    private String label;
-    private String title;
+  private String label;
+  private String title;
 }

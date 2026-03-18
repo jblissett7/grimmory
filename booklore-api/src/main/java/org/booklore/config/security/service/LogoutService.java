@@ -1,5 +1,6 @@
 package org.booklore.config.security.service;
 
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.booklore.config.security.oidc.OidcDiscoveryService;
@@ -19,87 +20,98 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.Instant;
-
 @Slf4j
 @Service
 @AllArgsConstructor
 public class LogoutService {
 
-    private final RefreshTokenRepository refreshTokenRepository;
-    private final OidcSessionRepository oidcSessionRepository;
-    private final UserRepository userRepository;
-    private final AppSettingService appSettingService;
-    private final OidcDiscoveryService discoveryService;
-    private final AuditService auditService;
-    private final AuthenticationService authenticationService;
+  private final RefreshTokenRepository refreshTokenRepository;
+  private final OidcSessionRepository oidcSessionRepository;
+  private final UserRepository userRepository;
+  private final AppSettingService appSettingService;
+  private final OidcDiscoveryService discoveryService;
+  private final AuditService auditService;
+  private final AuthenticationService authenticationService;
 
-    public LogoutResponse logout(Authentication auth, String refreshToken, String origin) {
-        BookLoreUserEntity user = resolveUser(auth, refreshToken);
+  public LogoutResponse logout(Authentication auth, String refreshToken, String origin) {
+    BookLoreUserEntity user = resolveUser(auth, refreshToken);
 
-        revokeRefreshToken(user);
+    revokeRefreshToken(user);
 
-        String logoutUrl = null;
-        if (user.getProvisioningMethod() == ProvisioningMethod.OIDC && appSettingService.getAppSettings().isOidcEnabled()) {
-            logoutUrl = buildOidcLogoutUrl(user, origin);
-        }
-
-        auditService.log(AuditAction.LOGOUT, "User", user.getId(), "User logged out: " + user.getUsername());
-        return new LogoutResponse(logoutUrl);
+    String logoutUrl = null;
+    if (user.getProvisioningMethod() == ProvisioningMethod.OIDC
+        && appSettingService.getAppSettings().isOidcEnabled()) {
+      logoutUrl = buildOidcLogoutUrl(user, origin);
     }
 
-    private BookLoreUserEntity resolveUser(Authentication auth, String refreshToken) {
-        if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
-            var bookLoreUser = authenticationService.getAuthenticatedUser();
-            return userRepository.findByUsername(bookLoreUser.getUsername())
-                    .orElseThrow(() -> ApiError.GENERIC_UNAUTHORIZED.createException("User not found"));
-        }
+    auditService.log(
+        AuditAction.LOGOUT, "User", user.getId(), "User logged out: " + user.getUsername());
+    return new LogoutResponse(logoutUrl);
+  }
 
-        if (refreshToken != null && !refreshToken.isBlank()) {
-            RefreshTokenEntity tokenEntity = refreshTokenRepository.findByToken(refreshToken)
-                    .orElseThrow(() -> ApiError.GENERIC_UNAUTHORIZED.createException("Invalid refresh token"));
-            return tokenEntity.getUser();
-        }
-
-        throw ApiError.GENERIC_UNAUTHORIZED.createException("No authentication context or refresh token provided");
+  private BookLoreUserEntity resolveUser(Authentication auth, String refreshToken) {
+    if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
+      var bookLoreUser = authenticationService.getAuthenticatedUser();
+      return userRepository
+          .findByUsername(bookLoreUser.getUsername())
+          .orElseThrow(() -> ApiError.GENERIC_UNAUTHORIZED.createException("User not found"));
     }
 
-    private void revokeRefreshToken(BookLoreUserEntity user) {
-        refreshTokenRepository.findAllByUserAndRevokedFalse(user).forEach(token -> {
-            token.setRevoked(true);
-            token.setRevocationDate(Instant.now());
-            refreshTokenRepository.save(token);
-        });
+    if (refreshToken != null && !refreshToken.isBlank()) {
+      RefreshTokenEntity tokenEntity =
+          refreshTokenRepository
+              .findByToken(refreshToken)
+              .orElseThrow(
+                  () -> ApiError.GENERIC_UNAUTHORIZED.createException("Invalid refresh token"));
+      return tokenEntity.getUser();
     }
 
-    private String buildOidcLogoutUrl(BookLoreUserEntity user, String origin) {
-        try {
-            var providerDetails = appSettingService.getAppSettings().getOidcProviderDetails();
-            var session = oidcSessionRepository.findFirstByUserIdAndRevokedFalseOrderByCreatedAtDesc(user.getId());
+    throw ApiError.GENERIC_UNAUTHORIZED.createException(
+        "No authentication context or refresh token provided");
+  }
 
-            if (session.isPresent()) {
-                OidcSessionEntity oidcSession = session.get();
-                oidcSession.setRevoked(true);
-                oidcSessionRepository.save(oidcSession);
+  private void revokeRefreshToken(BookLoreUserEntity user) {
+    refreshTokenRepository
+        .findAllByUserAndRevokedFalse(user)
+        .forEach(
+            token -> {
+              token.setRevoked(true);
+              token.setRevocationDate(Instant.now());
+              refreshTokenRepository.save(token);
+            });
+  }
 
-                var discovery = discoveryService.discover(providerDetails.getIssuerUri());
-                if (discovery.endSessionEndpoint() != null) {
-                    String postLogoutRedirectUri = (origin != null && !origin.isBlank() ? origin : "") + "/login";
+  private String buildOidcLogoutUrl(BookLoreUserEntity user, String origin) {
+    try {
+      var providerDetails = appSettingService.getAppSettings().getOidcProviderDetails();
+      var session =
+          oidcSessionRepository.findFirstByUserIdAndRevokedFalseOrderByCreatedAtDesc(user.getId());
 
-                    var builder = UriComponentsBuilder.fromUriString(discovery.endSessionEndpoint())
-                            .queryParam("client_id", providerDetails.getClientId())
-                            .queryParam("id_token_hint", oidcSession.getIdTokenHint());
+      if (session.isPresent()) {
+        OidcSessionEntity oidcSession = session.get();
+        oidcSession.setRevoked(true);
+        oidcSessionRepository.save(oidcSession);
 
-                    if (!postLogoutRedirectUri.equals("/login")) {
-                        builder.queryParam("post_logout_redirect_uri", postLogoutRedirectUri);
-                    }
+        var discovery = discoveryService.discover(providerDetails.getIssuerUri());
+        if (discovery.endSessionEndpoint() != null) {
+          String postLogoutRedirectUri =
+              (origin != null && !origin.isBlank() ? origin : "") + "/login";
 
-                    return builder.build().toUriString();
-                }
-            }
-        } catch (Exception e) {
-            log.warn("Failed to build OIDC logout URL: {}", e.getMessage());
+          var builder =
+              UriComponentsBuilder.fromUriString(discovery.endSessionEndpoint())
+                  .queryParam("client_id", providerDetails.getClientId())
+                  .queryParam("id_token_hint", oidcSession.getIdTokenHint());
+
+          if (!postLogoutRedirectUri.equals("/login")) {
+            builder.queryParam("post_logout_redirect_uri", postLogoutRedirectUri);
+          }
+
+          return builder.build().toUriString();
         }
-        return null;
+      }
+    } catch (Exception e) {
+      log.warn("Failed to build OIDC logout URL: {}", e.getMessage());
     }
+    return null;
+  }
 }

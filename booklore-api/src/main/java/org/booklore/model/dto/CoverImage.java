@@ -4,8 +4,8 @@ import lombok.Value;
 
 @Value
 public class CoverImage {
-    String url;
-    int width;
-    int height;
-    int index;
+  String url;
+  int width;
+  int height;
+  int index;
 }

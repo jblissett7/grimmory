@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SidecarSeries {
-    private String name;
-    private Float number;
-    private Integer total;
+  private String name;
+  private Float number;
+  private Integer total;
 }

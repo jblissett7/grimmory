@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EpubViewerPreferences {
-    private Long bookId;
-    private String theme;
-    private String font;
-    private String flow;
-    private String spread;
-    private Integer fontSize;
-    private Float letterSpacing;
-    private Float lineHeight;
-    private Long customFontId;
+  private Long bookId;
+  private String theme;
+  private String font;
+  private String flow;
+  private String spread;
+  private Integer fontSize;
+  private Float letterSpacing;
+  private Float lineHeight;
+  private Long customFontId;
 }

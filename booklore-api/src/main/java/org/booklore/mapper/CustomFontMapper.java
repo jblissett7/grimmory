@@ -7,5 +7,5 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface CustomFontMapper {
 
-    CustomFontDto toDto(CustomFontEntity entity);
+  CustomFontDto toDto(CustomFontEntity entity);
 }

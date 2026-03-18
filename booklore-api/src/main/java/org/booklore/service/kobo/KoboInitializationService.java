@@ -16,36 +16,35 @@ import tools.jackson.databind.node.ObjectNode;
 @RequiredArgsConstructor
 public class KoboInitializationService {
 
-    private final KoboServerProxy koboServerProxy;
-    private final KoboResourcesComponent koboResourcesComponent;
-    private final KoboUrlBuilder koboUrlBuilder;
+  private final KoboServerProxy koboServerProxy;
+  private final KoboResourcesComponent koboResourcesComponent;
+  private final KoboUrlBuilder koboUrlBuilder;
 
-    public ResponseEntity<KoboResources> initialize(String token) throws JacksonException {
-        JsonNode resources;
+  public ResponseEntity<KoboResources> initialize(String token) throws JacksonException {
+    JsonNode resources;
 
-        JsonNode body = null;
-        try {
-            var response = koboServerProxy.proxyCurrentRequest(null, false);
-            body = response != null ? response.getBody() : null;
-        } catch (Exception e) {
-            log.warn("Failed to get response from Kobo /v1/initialization, fallback to noproxy", e);
-        }
-
-        resources = (body != null && body.has("Resources"))
-                ? body.get("Resources")
-                : koboResourcesComponent.getResources();
-
-        if (resources instanceof ObjectNode objectNode) {
-            UriComponentsBuilder baseBuilder = koboUrlBuilder.baseBuilder();
-
-            objectNode.put("image_host", baseBuilder.build().toUriString());
-            objectNode.put("image_url_template", koboUrlBuilder.imageUrlTemplate(token));
-            objectNode.put("image_url_quality_template", koboUrlBuilder.imageUrlQualityTemplate(token));
-            objectNode.put("library_sync", koboUrlBuilder.librarySyncUrl(token));
-        }
-
-        return ResponseEntity.ok()
-                .header("x-kobo-apitoken", "e30=")
-                .body(new KoboResources(resources));
+    JsonNode body = null;
+    try {
+      var response = koboServerProxy.proxyCurrentRequest(null, false);
+      body = response != null ? response.getBody() : null;
+    } catch (Exception e) {
+      log.warn("Failed to get response from Kobo /v1/initialization, fallback to noproxy", e);
     }
+
+    resources =
+        (body != null && body.has("Resources"))
+            ? body.get("Resources")
+            : koboResourcesComponent.getResources();
+
+    if (resources instanceof ObjectNode objectNode) {
+      UriComponentsBuilder baseBuilder = koboUrlBuilder.baseBuilder();
+
+      objectNode.put("image_host", baseBuilder.build().toUriString());
+      objectNode.put("image_url_template", koboUrlBuilder.imageUrlTemplate(token));
+      objectNode.put("image_url_quality_template", koboUrlBuilder.imageUrlQualityTemplate(token));
+      objectNode.put("library_sync", koboUrlBuilder.librarySyncUrl(token));
+    }
+
+    return ResponseEntity.ok().header("x-kobo-apitoken", "e30=").body(new KoboResources(resources));
+  }
 }

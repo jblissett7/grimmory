@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ListeningAuthorResponse {
-    private String author;
-    private Long bookCount;
-    private Long totalSessions;
-    private Long totalDurationSeconds;
+  private String author;
+  private Long bookCount;
+  private Long totalSessions;
+  private Long totalDurationSeconds;
 }

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ChangeUserPasswordRequest {
-    private Long userId;
-    private String newPassword;
+  private Long userId;
+  private String newPassword;
 }

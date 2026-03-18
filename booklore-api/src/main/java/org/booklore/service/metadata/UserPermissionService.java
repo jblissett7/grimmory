@@ -1,4 +1,3 @@
 package org.booklore.service.metadata;
 
-public class UserPermissionService {
-}
+public class UserPermissionService {}

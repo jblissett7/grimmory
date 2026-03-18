@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class KomgaMediaDto {
-    private String status;
-    private String mediaType;
-    private String mediaProfile;
-    private Integer pagesCount;
-    private String comment;
-    private Boolean epubDivinaCompatible;
-    private Boolean epubIsKepub;
+  private String status;
+  private String mediaType;
+  private String mediaProfile;
+  private Integer pagesCount;
+  private String comment;
+  private Boolean epubDivinaCompatible;
+  private Boolean epubIsKepub;
 }

@@ -1,24 +1,23 @@
 package org.booklore.mapper;
 
-import org.booklore.model.entity.OpdsUserV2Entity;
+import java.util.List;
 import org.booklore.model.dto.OpdsUserV2;
+import org.booklore.model.entity.OpdsUserV2Entity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
-import java.util.List;
-
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface OpdsUserV2Mapper {
 
-    OpdsUserV2Mapper INSTANCE = Mappers.getMapper(OpdsUserV2Mapper.class);
+  OpdsUserV2Mapper INSTANCE = Mappers.getMapper(OpdsUserV2Mapper.class);
 
-    @Mapping(source = "user.id", target = "userId")
-    OpdsUserV2 toDto(OpdsUserV2Entity entity);
+  @Mapping(source = "user.id", target = "userId")
+  OpdsUserV2 toDto(OpdsUserV2Entity entity);
 
-    List<OpdsUserV2> toDto(List<OpdsUserV2Entity> entities);
+  List<OpdsUserV2> toDto(List<OpdsUserV2Entity> entities);
 
-    @Mapping(target = "user.id", source = "userId")
-    OpdsUserV2Entity toEntity(OpdsUserV2 dto);
+  @Mapping(target = "user.id", source = "userId")
+  OpdsUserV2Entity toEntity(OpdsUserV2 dto);
 }

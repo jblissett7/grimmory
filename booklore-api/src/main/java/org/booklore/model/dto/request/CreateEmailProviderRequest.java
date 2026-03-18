@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateEmailProviderRequest {
-    private String name;
-    private String host;
-    private Integer port;
-    private String username;
-    private String password;
-    private String fromAddress;
-    private Boolean auth;
-    private Boolean startTls;
-    private Boolean shared;
+  private String name;
+  private String host;
+  private Integer port;
+  private String username;
+  private String password;
+  private String fromAddress;
+  private Boolean auth;
+  private Boolean startTls;
+  private Boolean shared;
 }

@@ -10,11 +10,12 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface EmailRecipientV2Mapper {
 
-    EmailRecipientV2 toDTO(EmailRecipientV2Entity entity);
+  EmailRecipientV2 toDTO(EmailRecipientV2Entity entity);
 
-    EmailRecipientV2Entity toEntity(EmailRecipientV2 emailRecipient);
+  EmailRecipientV2Entity toEntity(EmailRecipientV2 emailRecipient);
 
-    EmailRecipientV2Entity toEntity(CreateEmailRecipientRequest createRequest);
+  EmailRecipientV2Entity toEntity(CreateEmailRecipientRequest createRequest);
 
-    void updateEntityFromRequest(CreateEmailRecipientRequest request, @MappingTarget EmailRecipientV2Entity entity);
+  void updateEntityFromRequest(
+      CreateEmailRecipientRequest request, @MappingTarget EmailRecipientV2Entity entity);
 }

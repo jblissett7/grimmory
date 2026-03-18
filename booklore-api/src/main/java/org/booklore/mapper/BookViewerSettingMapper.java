@@ -8,6 +8,5 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface BookViewerSettingMapper {
 
-    BookViewerSetting toBookViewerSetting(PdfViewerPreferencesEntity entity);
-
+  BookViewerSetting toBookViewerSetting(PdfViewerPreferencesEntity entity);
 }

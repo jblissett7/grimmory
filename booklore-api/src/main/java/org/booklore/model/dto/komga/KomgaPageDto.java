@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class KomgaPageDto {
-    private Integer number;
-    private String fileName;
-    private String mediaType;
-    private Integer width;
-    private Integer height;
-    private Long fileSize;
+  private Integer number;
+  private String fileName;
+  private String mediaType;
+  private Integer width;
+  private Integer height;
+  private Long fileSize;
 }

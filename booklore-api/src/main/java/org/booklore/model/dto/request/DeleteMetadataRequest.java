@@ -1,18 +1,14 @@
 package org.booklore.model.dto.request;
 
-import org.booklore.model.enums.MergeMetadataType;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-
 import java.util.List;
+import lombok.Data;
+import org.booklore.model.enums.MergeMetadataType;
 
 @Data
 public class DeleteMetadataRequest {
-    @NotNull
-    private MergeMetadataType metadataType;
+  @NotNull private MergeMetadataType metadataType;
 
-    @NotEmpty
-    private List<String> valuesToDelete;
+  @NotEmpty private List<String> valuesToDelete;
 }
-

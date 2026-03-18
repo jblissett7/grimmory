@@ -11,10 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AudiobookProgress {
-    @NotNull
-    Long positionMs;
-    Integer trackIndex;
-    Long trackPositionMs;
-    @NotNull
-    Float percentage;
+  @NotNull Long positionMs;
+  Integer trackIndex;
+  Long trackPositionMs;
+  @NotNull Float percentage;
 }

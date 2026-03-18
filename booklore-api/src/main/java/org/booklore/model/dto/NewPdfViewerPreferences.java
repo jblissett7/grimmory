@@ -11,10 +11,10 @@ import org.booklore.model.enums.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NewPdfViewerPreferences {
-    private Long bookId;
-    private NewPdfPageSpread pageSpread;
-    private NewPdfPageViewMode pageViewMode;
-    private NewPdfBackgroundColor backgroundColor;
-    private NewPdfPageFitMode fitMode;
-    private NewPdfPageScrollMode scrollMode;
+  private Long bookId;
+  private NewPdfPageSpread pageSpread;
+  private NewPdfPageViewMode pageViewMode;
+  private NewPdfBackgroundColor backgroundColor;
+  private NewPdfPageFitMode fitMode;
+  private NewPdfPageScrollMode scrollMode;
 }

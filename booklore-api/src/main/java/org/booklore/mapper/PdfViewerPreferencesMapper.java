@@ -8,7 +8,7 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PdfViewerPreferencesMapper {
 
-    PdfViewerPreferences toModel(PdfViewerPreferencesEntity entity);
+  PdfViewerPreferences toModel(PdfViewerPreferencesEntity entity);
 
-    PdfViewerPreferencesEntity toEntity(PdfViewerPreferences model);
+  PdfViewerPreferencesEntity toEntity(PdfViewerPreferences model);
 }

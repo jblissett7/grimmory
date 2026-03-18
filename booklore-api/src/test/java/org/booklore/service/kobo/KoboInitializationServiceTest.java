@@ -1,5 +1,8 @@
 package org.booklore.service.kobo;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import org.booklore.model.dto.kobo.KoboResources;
 import org.booklore.util.kobo.KoboUrlBuilder;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,186 +20,184 @@ import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.node.ObjectNode;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 @DisplayName("KoboInitializationService Tests")
 class KoboInitializationServiceTest {
 
-    @Mock
-    private KoboServerProxy koboServerProxy;
+  @Mock private KoboServerProxy koboServerProxy;
 
-    @Mock
-    private KoboResourcesComponent koboResourcesComponent;
+  @Mock private KoboResourcesComponent koboResourcesComponent;
 
-    @Mock
-    private KoboUrlBuilder koboUrlBuilder;
+  @Mock private KoboUrlBuilder koboUrlBuilder;
 
-    @InjectMocks
-    private KoboInitializationService service;
+  @InjectMocks private KoboInitializationService service;
 
-    private final ObjectMapper objectMapper = JsonMapper.builder().build();
+  private final ObjectMapper objectMapper = JsonMapper.builder().build();
 
-    @BeforeEach
-    void setUp() {
-        when(koboUrlBuilder.baseBuilder()).thenReturn(UriComponentsBuilder.fromUriString("http://localhost:8080"));
-        when(koboUrlBuilder.imageUrlTemplate("test-token")).thenReturn("http://localhost:8080/kobo/test-token/image/{ImageId}/{Width}/{Height}/false/image.jpg");
-        when(koboUrlBuilder.imageUrlQualityTemplate("test-token")).thenReturn("http://localhost:8080/kobo/test-token/image/{ImageId}/{Width}/{Height}/{Quality}/{IsGreyscale}/image.jpg");
-        when(koboUrlBuilder.librarySyncUrl("test-token")).thenReturn("http://localhost:8080/kobo/test-token/v1/library/sync");
+  @BeforeEach
+  void setUp() {
+    when(koboUrlBuilder.baseBuilder())
+        .thenReturn(UriComponentsBuilder.fromUriString("http://localhost:8080"));
+    when(koboUrlBuilder.imageUrlTemplate("test-token"))
+        .thenReturn(
+            "http://localhost:8080/kobo/test-token/image/{ImageId}/{Width}/{Height}/false/image.jpg");
+    when(koboUrlBuilder.imageUrlQualityTemplate("test-token"))
+        .thenReturn(
+            "http://localhost:8080/kobo/test-token/image/{ImageId}/{Width}/{Height}/{Quality}/{IsGreyscale}/image.jpg");
+    when(koboUrlBuilder.librarySyncUrl("test-token"))
+        .thenReturn("http://localhost:8080/kobo/test-token/v1/library/sync");
+  }
+
+  @Nested
+  @DisplayName("When Kobo proxy returns Resources")
+  class WithProxyResources {
+
+    @Test
+    @DisplayName("Should use Resources from Kobo proxy response")
+    void initialize_usesProxyResources() throws Exception {
+      ObjectNode resources = objectMapper.createObjectNode();
+      resources.put("library_sync", "https://storeapi.kobo.com/v1/library/sync");
+      resources.put("image_host", "https://cdn.kobo.com/book-images/");
+
+      ObjectNode body = objectMapper.createObjectNode();
+      body.set("Resources", resources);
+
+      when(koboServerProxy.proxyCurrentRequest(null, false)).thenReturn(ResponseEntity.ok(body));
+
+      ResponseEntity<KoboResources> response = service.initialize("test-token");
+
+      assertEquals(200, response.getStatusCode().value());
+      assertNotNull(response.getBody());
+      JsonNode result = response.getBody().getResources();
+      assertEquals(
+          "http://localhost:8080/kobo/test-token/v1/library/sync",
+          result.get("library_sync").asText());
     }
 
-    @Nested
-    @DisplayName("When Kobo proxy returns Resources")
-    class WithProxyResources {
+    @Test
+    @DisplayName("Should override image_host with local base URL")
+    void initialize_overridesImageHost() throws Exception {
+      ObjectNode resources = objectMapper.createObjectNode();
+      resources.put("image_host", "https://cdn.kobo.com/book-images/");
 
-        @Test
-        @DisplayName("Should use Resources from Kobo proxy response")
-        void initialize_usesProxyResources() throws Exception {
-            ObjectNode resources = objectMapper.createObjectNode();
-            resources.put("library_sync", "https://storeapi.kobo.com/v1/library/sync");
-            resources.put("image_host", "https://cdn.kobo.com/book-images/");
+      ObjectNode body = objectMapper.createObjectNode();
+      body.set("Resources", resources);
 
-            ObjectNode body = objectMapper.createObjectNode();
-            body.set("Resources", resources);
+      when(koboServerProxy.proxyCurrentRequest(null, false)).thenReturn(ResponseEntity.ok(body));
 
-            when(koboServerProxy.proxyCurrentRequest(null, false))
-                    .thenReturn(ResponseEntity.ok(body));
+      ResponseEntity<KoboResources> response = service.initialize("test-token");
 
-            ResponseEntity<KoboResources> response = service.initialize("test-token");
-
-            assertEquals(200, response.getStatusCode().value());
-            assertNotNull(response.getBody());
-            JsonNode result = response.getBody().getResources();
-            assertEquals("http://localhost:8080/kobo/test-token/v1/library/sync", result.get("library_sync").asText());
-        }
-
-        @Test
-        @DisplayName("Should override image_host with local base URL")
-        void initialize_overridesImageHost() throws Exception {
-            ObjectNode resources = objectMapper.createObjectNode();
-            resources.put("image_host", "https://cdn.kobo.com/book-images/");
-
-            ObjectNode body = objectMapper.createObjectNode();
-            body.set("Resources", resources);
-
-            when(koboServerProxy.proxyCurrentRequest(null, false))
-                    .thenReturn(ResponseEntity.ok(body));
-
-            ResponseEntity<KoboResources> response = service.initialize("test-token");
-
-            JsonNode result = response.getBody().getResources();
-            assertEquals("http://localhost:8080", result.get("image_host").asText());
-        }
-
-        @Test
-        @DisplayName("Should override image_url_template with local URL")
-        void initialize_overridesImageUrlTemplate() throws Exception {
-            ObjectNode resources = objectMapper.createObjectNode();
-            resources.put("image_url_template", "https://cdn.kobo.com/book-images/{ImageId}/{Width}/{Height}/false/image.jpg");
-
-            ObjectNode body = objectMapper.createObjectNode();
-            body.set("Resources", resources);
-
-            when(koboServerProxy.proxyCurrentRequest(null, false))
-                    .thenReturn(ResponseEntity.ok(body));
-
-            ResponseEntity<KoboResources> response = service.initialize("test-token");
-
-            JsonNode result = response.getBody().getResources();
-            assertTrue(result.get("image_url_template").asText().contains("localhost:8080"));
-        }
+      JsonNode result = response.getBody().getResources();
+      assertEquals("http://localhost:8080", result.get("image_host").asText());
     }
 
-    @Nested
-    @DisplayName("When Kobo proxy fails or returns no Resources")
-    class WithoutProxyResources {
+    @Test
+    @DisplayName("Should override image_url_template with local URL")
+    void initialize_overridesImageUrlTemplate() throws Exception {
+      ObjectNode resources = objectMapper.createObjectNode();
+      resources.put(
+          "image_url_template",
+          "https://cdn.kobo.com/book-images/{ImageId}/{Width}/{Height}/false/image.jpg");
 
-        @Test
-        @DisplayName("Should fall back to local resources when proxy returns null body")
-        void initialize_fallsBackOnNullBody() throws Exception {
-            when(koboServerProxy.proxyCurrentRequest(null, false))
-                    .thenReturn(ResponseEntity.ok(null));
+      ObjectNode body = objectMapper.createObjectNode();
+      body.set("Resources", resources);
 
-            ObjectNode fallbackResources = objectMapper.createObjectNode();
-            fallbackResources.put("library_sync", "https://storeapi.kobo.com/v1/library/sync");
-            when(koboResourcesComponent.getResources()).thenReturn(fallbackResources);
+      when(koboServerProxy.proxyCurrentRequest(null, false)).thenReturn(ResponseEntity.ok(body));
 
-            ResponseEntity<KoboResources> response = service.initialize("test-token");
+      ResponseEntity<KoboResources> response = service.initialize("test-token");
 
-            assertEquals(200, response.getStatusCode().value());
-            verify(koboResourcesComponent).getResources();
-        }
+      JsonNode result = response.getBody().getResources();
+      assertTrue(result.get("image_url_template").asText().contains("localhost:8080"));
+    }
+  }
 
-        @Test
-        @DisplayName("Should fall back to local resources when proxy throws exception")
-        void initialize_fallsBackOnProxyException() throws Exception {
-            when(koboServerProxy.proxyCurrentRequest(null, false))
-                    .thenThrow(new RuntimeException("Connection refused"));
+  @Nested
+  @DisplayName("When Kobo proxy fails or returns no Resources")
+  class WithoutProxyResources {
 
-            ObjectNode fallbackResources = objectMapper.createObjectNode();
-            fallbackResources.put("library_sync", "https://storeapi.kobo.com/v1/library/sync");
-            when(koboResourcesComponent.getResources()).thenReturn(fallbackResources);
+    @Test
+    @DisplayName("Should fall back to local resources when proxy returns null body")
+    void initialize_fallsBackOnNullBody() throws Exception {
+      when(koboServerProxy.proxyCurrentRequest(null, false)).thenReturn(ResponseEntity.ok(null));
 
-            ResponseEntity<KoboResources> response = service.initialize("test-token");
+      ObjectNode fallbackResources = objectMapper.createObjectNode();
+      fallbackResources.put("library_sync", "https://storeapi.kobo.com/v1/library/sync");
+      when(koboResourcesComponent.getResources()).thenReturn(fallbackResources);
 
-            assertEquals(200, response.getStatusCode().value());
-            verify(koboResourcesComponent).getResources();
-        }
+      ResponseEntity<KoboResources> response = service.initialize("test-token");
 
-        @Test
-        @DisplayName("Should fall back when proxy response has no Resources key")
-        void initialize_fallsBackOnMissingResourcesKey() throws Exception {
-            ObjectNode body = objectMapper.createObjectNode();
-            body.put("SomeOtherKey", "value");
-
-            when(koboServerProxy.proxyCurrentRequest(null, false))
-                    .thenReturn(ResponseEntity.ok(body));
-
-            ObjectNode fallbackResources = objectMapper.createObjectNode();
-            fallbackResources.put("library_sync", "https://storeapi.kobo.com/v1/library/sync");
-            when(koboResourcesComponent.getResources()).thenReturn(fallbackResources);
-
-            ResponseEntity<KoboResources> response = service.initialize("test-token");
-
-            verify(koboResourcesComponent).getResources();
-            assertEquals("http://localhost:8080/kobo/test-token/v1/library/sync",
-                    response.getBody().getResources().get("library_sync").asText());
-        }
-
-        @Test
-        @DisplayName("Should fall back when proxy returns null response")
-        void initialize_fallsBackOnNullResponse() throws Exception {
-            when(koboServerProxy.proxyCurrentRequest(null, false)).thenReturn(null);
-
-            ObjectNode fallbackResources = objectMapper.createObjectNode();
-            fallbackResources.put("library_sync", "https://storeapi.kobo.com/v1/library/sync");
-            when(koboResourcesComponent.getResources()).thenReturn(fallbackResources);
-
-            ResponseEntity<KoboResources> response = service.initialize("test-token");
-
-            assertEquals(200, response.getStatusCode().value());
-            verify(koboResourcesComponent).getResources();
-        }
+      assertEquals(200, response.getStatusCode().value());
+      verify(koboResourcesComponent).getResources();
     }
 
-    @Nested
-    @DisplayName("Response Headers")
-    class ResponseHeaders {
+    @Test
+    @DisplayName("Should fall back to local resources when proxy throws exception")
+    void initialize_fallsBackOnProxyException() throws Exception {
+      when(koboServerProxy.proxyCurrentRequest(null, false))
+          .thenThrow(new RuntimeException("Connection refused"));
 
-        @Test
-        @DisplayName("Should include x-kobo-apitoken header")
-        void initialize_includesApiTokenHeader() throws Exception {
-            ObjectNode resources = objectMapper.createObjectNode();
-            ObjectNode body = objectMapper.createObjectNode();
-            body.set("Resources", resources);
+      ObjectNode fallbackResources = objectMapper.createObjectNode();
+      fallbackResources.put("library_sync", "https://storeapi.kobo.com/v1/library/sync");
+      when(koboResourcesComponent.getResources()).thenReturn(fallbackResources);
 
-            when(koboServerProxy.proxyCurrentRequest(null, false))
-                    .thenReturn(ResponseEntity.ok(body));
+      ResponseEntity<KoboResources> response = service.initialize("test-token");
 
-            ResponseEntity<KoboResources> response = service.initialize("test-token");
-
-            assertEquals("e30=", response.getHeaders().getFirst("x-kobo-apitoken"));
-        }
+      assertEquals(200, response.getStatusCode().value());
+      verify(koboResourcesComponent).getResources();
     }
+
+    @Test
+    @DisplayName("Should fall back when proxy response has no Resources key")
+    void initialize_fallsBackOnMissingResourcesKey() throws Exception {
+      ObjectNode body = objectMapper.createObjectNode();
+      body.put("SomeOtherKey", "value");
+
+      when(koboServerProxy.proxyCurrentRequest(null, false)).thenReturn(ResponseEntity.ok(body));
+
+      ObjectNode fallbackResources = objectMapper.createObjectNode();
+      fallbackResources.put("library_sync", "https://storeapi.kobo.com/v1/library/sync");
+      when(koboResourcesComponent.getResources()).thenReturn(fallbackResources);
+
+      ResponseEntity<KoboResources> response = service.initialize("test-token");
+
+      verify(koboResourcesComponent).getResources();
+      assertEquals(
+          "http://localhost:8080/kobo/test-token/v1/library/sync",
+          response.getBody().getResources().get("library_sync").asText());
+    }
+
+    @Test
+    @DisplayName("Should fall back when proxy returns null response")
+    void initialize_fallsBackOnNullResponse() throws Exception {
+      when(koboServerProxy.proxyCurrentRequest(null, false)).thenReturn(null);
+
+      ObjectNode fallbackResources = objectMapper.createObjectNode();
+      fallbackResources.put("library_sync", "https://storeapi.kobo.com/v1/library/sync");
+      when(koboResourcesComponent.getResources()).thenReturn(fallbackResources);
+
+      ResponseEntity<KoboResources> response = service.initialize("test-token");
+
+      assertEquals(200, response.getStatusCode().value());
+      verify(koboResourcesComponent).getResources();
+    }
+  }
+
+  @Nested
+  @DisplayName("Response Headers")
+  class ResponseHeaders {
+
+    @Test
+    @DisplayName("Should include x-kobo-apitoken header")
+    void initialize_includesApiTokenHeader() throws Exception {
+      ObjectNode resources = objectMapper.createObjectNode();
+      ObjectNode body = objectMapper.createObjectNode();
+      body.set("Resources", resources);
+
+      when(koboServerProxy.proxyCurrentRequest(null, false)).thenReturn(ResponseEntity.ok(body));
+
+      ResponseEntity<KoboResources> response = service.initialize("test-token");
+
+      assertEquals("e30=", response.getHeaders().getFirst("x-kobo-apitoken"));
+    }
+  }
 }

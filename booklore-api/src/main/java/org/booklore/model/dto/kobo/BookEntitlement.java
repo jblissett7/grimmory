@@ -16,43 +16,41 @@ import tools.jackson.databind.annotation.JsonNaming;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BookEntitlement {
-    private ActivePeriod activePeriod;
+  private ActivePeriod activePeriod;
 
-    @JsonProperty("IsRemoved")
-    @Builder.Default
-    private Boolean removed = false;
+  @JsonProperty("IsRemoved")
+  @Builder.Default
+  private Boolean removed = false;
 
-    private String status;
+  private String status;
 
-    @Builder.Default
-    private String accessibility = "Full";
+  @Builder.Default private String accessibility = "Full";
 
-    private String crossRevisionId;
-    private String revisionId;
+  private String crossRevisionId;
+  private String revisionId;
 
-    @JsonProperty("IsHiddenFromArchive")
-    @Builder.Default
-    private boolean hiddenFromArchive = false;
+  @JsonProperty("IsHiddenFromArchive")
+  @Builder.Default
+  private boolean hiddenFromArchive = false;
 
-    private String id;
-    private String created;
-    private String lastModified;
+  private String id;
+  private String created;
+  private String lastModified;
 
-    @JsonProperty("IsLocked")
-    @Builder.Default
-    private boolean locked = false;
+  @JsonProperty("IsLocked")
+  @Builder.Default
+  private boolean locked = false;
 
-    @Builder.Default
-    private String originCategory = "Imported";
+  @Builder.Default private String originCategory = "Imported";
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
-    @Builder
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class ActivePeriod {
-        private String from;
-        private String to;
-    }
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
+  @Builder
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  public static class ActivePeriod {
+    private String from;
+    private String to;
+  }
 }

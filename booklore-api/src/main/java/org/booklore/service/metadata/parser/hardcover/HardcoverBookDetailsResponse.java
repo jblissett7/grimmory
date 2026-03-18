@@ -10,16 +10,16 @@ import lombok.*;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class HardcoverBookDetailsResponse {
-    
-    private Data data;
-    
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Data {
-        @JsonProperty("books_by_pk")
-        private HardcoverBookDetails booksByPk;
-    }
+
+  private Data data;
+
+  @Getter
+  @Setter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  public static class Data {
+    @JsonProperty("books_by_pk")
+    private HardcoverBookDetails booksByPk;
+  }
 }
