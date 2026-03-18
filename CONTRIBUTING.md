@@ -229,6 +229,7 @@ Backend Java formatting is enforced with Spotless + `google-java-format`.
 
 - CI runs `./gradlew spotlessCheck` for the backend.
 - `./gradlew spotlessApply` can be used to format the entire backend or the files involved in your current change.
+- The repository includes `.git-blame-ignore-revs` for the one-time backend formatting commit. For local CLI blame, enable it with `git config blame.ignoreRevsFile .git-blame-ignore-revs`.
 
 ### Branch Naming
 
