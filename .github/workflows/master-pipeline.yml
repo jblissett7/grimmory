@@ -81,6 +81,30 @@ jobs:
           echo "❌ Backend tests failed"
           exit 1
 
+  backend-format:
+    name: Backend Format Check
+    needs: [ migration-check ]
+    if: needs.migration-check.result == 'success' || needs.migration-check.result == 'skipped'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Set Up JDK 25
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Check Backend Formatting
+        working-directory: ./booklore-api
+        run: ./gradlew spotlessCheck --no-daemon --build-cache
+
   frontend-tests:
     name: Frontend Tests
     needs: [ migration-check ]
@@ -147,8 +171,8 @@ jobs:
           exit 1
 
   build-and-release:
-    needs: [ backend-tests, frontend-tests ]
-    if: needs.backend-tests.result == 'success' && needs.frontend-tests.result == 'success'
+    needs: [ backend-tests, backend-format, frontend-tests ]
+    if: needs.backend-tests.result == 'success' && needs.backend-format.result == 'success' && needs.frontend-tests.result == 'success'
     runs-on: ubuntu-latest
     permissions:
       contents: write

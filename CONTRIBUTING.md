@@ -205,11 +205,30 @@ cd booklore-api
 ./gradlew test                                                        # Run all tests
 ./gradlew test --tests "com.booklore.api.service.BookServiceTest"     # Specific class
 ./gradlew test jacocoTestReport                                       # Coverage report
+./gradlew spotlessCheck                                               # Check Java formatting
+./gradlew spotlessApply                                               # Auto-format backend Java files
 ```
 
 ---
 
 ## Making Changes
+
+### Git Hooks
+
+To enable the repository-managed git hooks, run:
+
+```bash
+./scripts/install-git-hooks.sh
+```
+
+The pre-commit hook runs `spotlessApply` for the backend on every commit attempt, then re-stages `booklore-api/`.
+
+### Backend Formatting
+
+Backend Java formatting is enforced with Spotless + `google-java-format`.
+
+- CI runs `./gradlew spotlessCheck` for the backend.
+- `./gradlew spotlessApply` can be used to format the entire backend or the files involved in your current change.
 
 ### Branch Naming
 

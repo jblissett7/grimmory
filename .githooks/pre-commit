@@ -1,0 +1,9 @@
+#!/bin/sh
+set -eu
+
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+echo "Running Spotless for backend..."
+(cd booklore-api && ./gradlew spotlessApply --no-daemon --quiet)
+git add booklore-api
